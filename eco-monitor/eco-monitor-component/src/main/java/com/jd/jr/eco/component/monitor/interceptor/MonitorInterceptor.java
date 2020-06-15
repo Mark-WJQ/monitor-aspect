@@ -5,6 +5,7 @@ import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
 import com.jd.jr.eco.component.monitor.alarm.AlarmSupport;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttributeSource;
+import com.jd.jr.eco.component.monitor.support.ResultConvertSupport;
 import com.jd.jr.eco.component.result.Result;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -40,6 +41,11 @@ public class MonitorInterceptor implements MethodInterceptor {
      */
     private MonitorAttributeSource attributeSource;
 
+    /**
+     * 结果转换辅助
+     */
+    private ResultConvertSupport resultConvertSupport;
+
 
     /**
      * 切面处理构造方法
@@ -54,6 +60,11 @@ public class MonitorInterceptor implements MethodInterceptor {
         this.attributeSource = attributeSource;
     }
 
+
+    public void setResultConvertSupport(ResultConvertSupport resultConvertSupport) {
+        this.resultConvertSupport = resultConvertSupport;
+    }
+
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         MonitorAttribute attribute = getAttribute(invocation);
@@ -66,8 +77,11 @@ public class MonitorInterceptor implements MethodInterceptor {
         }
         try {
             Object result = invocation.proceed();
-            if (Objects.nonNull(result) && result instanceof Result) {
-                handleCode(attribute, (Result) result, alarmInfo);
+            if (Objects.nonNull(result)) {
+                Result r = getResult(result);
+                if (Objects.nonNull(r)) {
+                    handleCode(attribute, r, alarmInfo);
+                }
             }
             return result;
         } catch (Throwable e) {
@@ -99,7 +113,7 @@ public class MonitorInterceptor implements MethodInterceptor {
 
     private MonitorAttribute getAttribute(MethodInvocation invocation) {
         Method method = invocation.getMethod();
-        if (!Modifier.isPublic(method.getModifiers()) || Modifier.isStatic(method.getModifiers()) || Modifier.isFinal(method.getModifiers())){
+        if (!Modifier.isPublic(method.getModifiers()) || Modifier.isStatic(method.getModifiers()) || Modifier.isFinal(method.getModifiers())) {
             return null;
         }
         MonitorAttribute attribute = null;
@@ -150,7 +164,7 @@ public class MonitorInterceptor implements MethodInterceptor {
         try {
             alarmInfo.setResult(result);
             String code = result.getCode();
-            if (StringUtils.isEmpty(code)){
+            if (StringUtils.isEmpty(code)) {
                 return;
             }
             if (attribute.ingoreCode(code)) {
@@ -170,4 +184,22 @@ public class MonitorInterceptor implements MethodInterceptor {
             logger.error("监控处理异常请注意", t);
         }
     }
+
+
+    private Result getResult(Object result) {
+        try {
+            if (result instanceof Result) {
+                return (Result) result;
+            } else {
+                if (Objects.nonNull(resultConvertSupport)) {
+                    return resultConvertSupport.convert(result);
+                }
+            }
+        } catch (Throwable t) {
+            logger.error("监控结果转换异常", t);
+        }
+        return null;
+    }
+
+
 }

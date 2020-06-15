@@ -12,6 +12,7 @@ import com.jd.jr.eco.component.monitor.interceptor.CandidateClassFilter;
 import com.jd.jr.eco.component.monitor.interceptor.MonitorAnnotationPointcut;
 import com.jd.jr.eco.component.monitor.interceptor.MonitorInterceptor;
 import com.jd.jr.eco.component.monitor.starter.adapter.MonitorPointcutAdapter;
+import com.jd.jr.eco.component.monitor.support.ResultConvertSupport;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
@@ -143,8 +144,10 @@ public class MonitorConfiguration {
 
 
     @Bean
-    public Advice monitorAdvice(AlarmSupport alarmSupport, MonitorAttributeSource attributeSource) {
-        return new MonitorInterceptor(alarmSupport, attributeSource);
+    public Advice monitorAdvice(AlarmSupport alarmSupport, MonitorAttributeSource attributeSource, ObjectProvider<ResultConvertSupport> convertSupport) {
+        MonitorInterceptor interceptor = new MonitorInterceptor(alarmSupport, attributeSource);
+        interceptor.setResultConvertSupport(convertSupport.getIfAvailable());
+        return interceptor;
     }
 
 
