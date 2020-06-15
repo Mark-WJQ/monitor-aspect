@@ -12,6 +12,7 @@
         <module>eco-component-sample</module>
         <module>eco-monitor-component</module>
         <module>result-component</module>
+        <module>eco-monitor-component-spring-boot-starter</module>
     </modules>
 
     <properties>

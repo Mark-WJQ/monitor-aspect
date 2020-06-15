@@ -13,7 +13,7 @@ import java.lang.annotation.Annotation;
  */
 public class MonitorConfig {
 
-
+    public static final String MONITOR_PRE = "monitor";
     /**
      * 表达式
      */

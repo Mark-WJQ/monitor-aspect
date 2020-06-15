@@ -6,6 +6,10 @@ package com.jd.jr.eco.component.monitor.domain;
  */
 public class UmpConfig {
 
+    public static final String UMP_CONFIG_PRE = "ump.monitor";
+
+    private boolean enable;
+
     private String systemKey;
 
     private String jvmKey;
@@ -24,5 +28,26 @@ public class UmpConfig {
 
     public void setJvmKey(String jvmKey) {
         this.jvmKey = jvmKey;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"enable\":")
+                .append(enable);
+        sb.append(",\"systemKey\":\"")
+                .append(systemKey).append('\"');
+        sb.append(",\"jvmKey\":\"")
+                .append(jvmKey).append('\"');
+        sb.append("}");
+        return sb.toString();
     }
 }

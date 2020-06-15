@@ -109,6 +109,9 @@ public class UmpAlarmSupport implements AlarmSupport<UmpAlarmInfo, DefaultMonito
      */
     @Override
     public void end(UmpAlarmInfo info) {
+        if (logger.isDebugEnabled()){
+            logger.debug("ump monitor end,key:{}",info.getInfo().getKey());
+        }
         Profiler.registerInfoEnd(info.getInfo());
     }
 
@@ -120,7 +123,7 @@ public class UmpAlarmSupport implements AlarmSupport<UmpAlarmInfo, DefaultMonito
     @Override
     public void ingore(UmpAlarmInfo alarmInfo) {
         if (logger.isDebugEnabled()) {
-            logger.debug("ingore ump monitor info,key:{},result:{}", alarmInfo.getInfo().getKey(), alarmInfo.exception() ? alarmInfo.getException() : alarmInfo.getResult());
+            logger.debug("ingore ump monitor info,key:{},result:{}", alarmInfo.getInfo().getKey(), alarmInfo.exception() ? alarmInfo.getException() : alarmInfo.getResult().getCode());
         }
     }
 

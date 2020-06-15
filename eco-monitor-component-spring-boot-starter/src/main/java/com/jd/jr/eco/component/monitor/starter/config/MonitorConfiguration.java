@@ -1,8 +1,9 @@
-package com.jd.jr.eco.component.monitor.config;
+package com.jd.jr.eco.component.monitor.starter.config;
 
 
 import com.jd.jr.eco.component.monitor.alarm.AlarmSupport;
 import com.jd.jr.eco.component.monitor.alarm.AlarmSupportImpl;
+import com.jd.jr.eco.component.monitor.alarm.UmpAlarmSupport;
 import com.jd.jr.eco.component.monitor.annotation.DefaultMonitorAnnotationParser;
 import com.jd.jr.eco.component.monitor.annotation.Monitor;
 import com.jd.jr.eco.component.monitor.annotation.MonitorAnnotationParser;
@@ -10,7 +11,7 @@ import com.jd.jr.eco.component.monitor.domain.*;
 import com.jd.jr.eco.component.monitor.interceptor.CandidateClassFilter;
 import com.jd.jr.eco.component.monitor.interceptor.MonitorAnnotationPointcut;
 import com.jd.jr.eco.component.monitor.interceptor.MonitorInterceptor;
-import com.jd.jr.eco.component.monitor.interceptor.MonitorPointcutAdapter;
+import com.jd.jr.eco.component.monitor.starter.adapter.MonitorPointcutAdapter;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
@@ -31,6 +32,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import static com.jd.jr.eco.component.monitor.domain.UmpConfig.UMP_CONFIG_PRE;
+
 /**
  * 初始化 configuration
  * @author wangjianqiang24
@@ -41,10 +44,24 @@ import java.util.List;
 @ConditionalOnProperty(prefix = MonitorEnable.PRE,name = "enable", havingValue = "true")
 public class MonitorConfiguration {
 
-    private static final String MONITOR_PRE = "monitor";
 
     @Bean
-    @ConfigurationProperties(prefix = MONITOR_PRE)
+    @ConfigurationProperties(prefix = UMP_CONFIG_PRE)
+    @ConditionalOnProperty(prefix = UMP_CONFIG_PRE,name = "enable",havingValue = "true")
+    public UmpConfig umpConfig(){
+        return new UmpConfig();
+    }
+
+
+    @Bean
+    @ConditionalOnProperty(prefix = UMP_CONFIG_PRE,name = "enable",havingValue = "true")
+    public UmpAlarmSupport umpAlarmSupport(){
+        return new UmpAlarmSupport(umpConfig());
+    }
+
+
+    @Bean
+    @ConfigurationProperties(prefix = MonitorConfig.MONITOR_PRE)
     @ConditionalOnMissingBean
     public MonitorConfig monitorConfig(){
         return new MonitorConfig();
@@ -52,7 +69,7 @@ public class MonitorConfiguration {
 
 
     @Bean
-    @ConditionalOnProperty(prefix = MONITOR_PRE, name = "expression")
+    @ConditionalOnProperty(prefix = MonitorConfig.MONITOR_PRE, name = "expression")
     public MonitorPointcutAdapter expressionPointcut(MonitorConfig monitorConfig) {
         AspectJExpressionPointcut pointCut = new AspectJExpressionPointcut();
         pointCut.setExpression(monitorConfig.getExpression());
@@ -60,7 +77,7 @@ public class MonitorConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = MONITOR_PRE, name = "annotation")
+    @ConditionalOnProperty(prefix = MonitorConfig.MONITOR_PRE, name = "annotation")
     public MonitorPointcutAdapter annotationMatchingPointcut(MonitorConfig monitorConfig, ObjectProvider<CandidateClassFilter> classFilter) {
         if (classFilter.getIfAvailable() != null){
             Pointcut pointcut = new MonitorAnnotationPointcut(monitorConfig.getAnnotation(),classFilter.getIfAvailable());

@@ -1,4 +1,4 @@
-package com.jd.jr.eco.component.monitor.config;
+package com.jd.jr.eco.component.monitor.starter.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

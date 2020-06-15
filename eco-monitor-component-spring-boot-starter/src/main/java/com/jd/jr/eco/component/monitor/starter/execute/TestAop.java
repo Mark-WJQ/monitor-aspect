@@ -1,4 +1,4 @@
-package com.jd.jr.eco.component.monitor.execute;
+package com.jd.jr.eco.component.monitor.starter.execute;
 
 
 import com.jd.jr.eco.component.monitor.annotation.Monitor;
@@ -17,7 +17,7 @@ public class TestAop implements TestAopInf<List> {
 
 
     @Override
-    @Monitor
+    @Monitor(key = "hahahhah")
     public Result monitor(List list){
         System.out.println("--------------------------------");
         return new Result() {
