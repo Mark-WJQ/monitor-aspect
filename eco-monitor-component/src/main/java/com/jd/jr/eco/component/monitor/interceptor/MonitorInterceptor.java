@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -149,6 +150,9 @@ public class MonitorInterceptor implements MethodInterceptor {
         try {
             alarmInfo.setResult(result);
             String code = result.getCode();
+            if (StringUtils.isEmpty(code)){
+                return;
+            }
             if (attribute.ingoreCode(code)) {
                 alarmSupport.ingore(alarmInfo);
             } else {

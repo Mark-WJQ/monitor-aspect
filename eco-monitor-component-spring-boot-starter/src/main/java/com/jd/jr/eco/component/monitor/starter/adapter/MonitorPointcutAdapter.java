@@ -1,4 +1,4 @@
-package com.jd.jr.eco.component.monitor.interceptor;
+package com.jd.jr.eco.component.monitor.starter.adapter;
 
 import org.springframework.aop.Pointcut;
 

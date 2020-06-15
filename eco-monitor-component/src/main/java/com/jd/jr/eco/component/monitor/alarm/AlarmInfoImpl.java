@@ -17,11 +17,11 @@ public class AlarmInfoImpl implements AlarmInfo {
     /**
      * 设置报警信息
      *
-     * @param info
+     * @param result
      */
     @Override
-    public void setResult(Result info) {
-        this.result = info;
+    public void setResult(Result result) {
+        this.result = result;
     }
 
     /**
@@ -41,7 +41,7 @@ public class AlarmInfoImpl implements AlarmInfo {
      */
     @Override
     public boolean exception() {
-        return t == null;
+        return t != null;
     }
 
 
