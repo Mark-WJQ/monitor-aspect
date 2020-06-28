@@ -1,8 +1,7 @@
-package com.jd.jr.eco.component.monitor.annotation;
+package com.jd.jr.eco.component.monitor.meta;
 
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
-import com.jd.jr.eco.component.monitor.domain.ProfEnum;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 

@@ -1,7 +1,7 @@
 package com.jd.jr.eco.component.monitor.starter.execute;
 
 
-import com.jd.jr.eco.component.monitor.annotation.Monitor;
+import com.jd.jr.eco.component.monitor.meta.Monitor;
 import com.jd.jr.eco.component.result.Result;
 import org.springframework.stereotype.Component;
 
