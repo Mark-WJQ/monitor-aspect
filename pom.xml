@@ -11,6 +11,7 @@
     <modules>
         <module>result-component</module>
         <module>eco-monitor</module>
+        <module>exception-component</module>
     </modules>
 
     <properties>
