@@ -1,6 +1,6 @@
 package com.jd.jr.eco.component.enums;
 
-import com.jd.jr.eco.component.exception.CodeException;
+import com.jd.jr.eco.component.exception.CodeRunTimeException;
 import org.junit.Test;
 
 /**
@@ -14,7 +14,7 @@ public class ReponseEnumTest {
     public void codeTest(){
         try {
             ReponseEnum.NULL.assertNotNull(null,1111);
-        }catch (CodeException e){
+        }catch (CodeRunTimeException e){
             System.out.println(e.getInfo());
         }
 
