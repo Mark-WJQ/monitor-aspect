@@ -1,6 +1,5 @@
 package com.jd.jr.eco.component.asserts;
 
-import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -26,5 +25,4 @@ public interface Assert {
 
     RuntimeException newException(Throwable cause,Object... args);
 
-    MessageFormat getFormat();
 }
