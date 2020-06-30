@@ -20,7 +20,7 @@ public class DefaultResult<T> implements Result {
     /**
      * 真实执行结果
      */
-    private T realResult;
+    private T data;
 
     /**
      * 执行结果code
@@ -50,11 +50,24 @@ public class DefaultResult<T> implements Result {
         this.info = info;
     }
 
-    public void setRealResult(T realResult) {
-        this.realResult = realResult;
+    public T getData() {
+        return data;
     }
 
-    public T getRealResult() {
-        return realResult;
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"code\":\"")
+                .append(code).append('\"');
+        sb.append(",\"info\":\"")
+                .append(info).append('\"');
+        sb.append(",\"data\":")
+                .append(data);
+        sb.append("}");
+        return sb.toString();
     }
 }
