@@ -1,7 +1,7 @@
 package com.jd.jr.eco.component.asserts;
 
 import com.jd.jr.eco.component.enums.IResultEnum;
-import com.jd.jr.eco.component.exception.CodeException;
+import com.jd.jr.eco.component.exception.CodeRunTimeException;
 
 /**
  * @author wangjianqiang24
@@ -10,14 +10,14 @@ import com.jd.jr.eco.component.exception.CodeException;
 public interface CodeExceptionAssert extends Assert ,IResultEnum {
 
     @Override
-    default CodeException newException(Object... args) {
+    default CodeRunTimeException newException(Object... args) {
        String msg = this.getFormat().format(args);
-        return new CodeException(this,msg);
+        return new CodeRunTimeException(this,msg);
     }
 
     @Override
-   default CodeException newException(Throwable cause, Object... args){
+   default CodeRunTimeException newException(Throwable cause, Object... args){
         String msg = this.getFormat().format(getInfo(),args);
-        return new CodeException(this,msg,cause);
+        return new CodeRunTimeException(this,msg,cause);
     }
 }

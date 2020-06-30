@@ -7,7 +7,7 @@ import com.jd.jr.eco.component.result.Result;
  * @author wangjianqiang24
  * @date 2020/6/28
  */
-public class CodeException extends RuntimeException implements Result {
+public class CodeRunTimeException extends RuntimeException implements Result {
 
     /**
      * 状态码
@@ -20,14 +20,14 @@ public class CodeException extends RuntimeException implements Result {
     private String info;
 
 
-    public CodeException(IResultEnum resultEnum, String message, Throwable cause) {
+    public CodeRunTimeException(IResultEnum resultEnum, String message, Throwable cause) {
         super(message, cause);
         this.code = resultEnum.getCode();
         this.info = message;
     }
 
 
-    public CodeException(IResultEnum resultEnum, String message) {
+    public CodeRunTimeException(IResultEnum resultEnum, String message) {
         super(message);
         this.code = resultEnum.getCode();
         this.info = message;
