@@ -1,6 +1,8 @@
 package com.jd.jr.eco.component.asserts;
 
+import java.text.MessageFormat;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * @author wangjianqiang24
@@ -9,7 +11,12 @@ import java.util.Objects;
 public interface Assert {
 
     default void assertNotNull(Object obj,Object... args){
-        if (Objects.isNull(obj)){
+        assertCond((o)-> Objects.isNull(o),obj,args);
+    }
+
+
+    default void assertCond(Predicate cond,Object obj,Object... args){
+        if (cond.test(obj)){
             throw newException(args);
         }
     }
@@ -19,4 +26,5 @@ public interface Assert {
 
     RuntimeException newException(Throwable cause,Object... args);
 
+    MessageFormat getFormat();
 }
