@@ -4,13 +4,13 @@ package com.jd.jr.eco.component.monitor.starter.config;
 import com.jd.jr.eco.component.monitor.alarm.AlarmSupport;
 import com.jd.jr.eco.component.monitor.alarm.AlarmSupportImpl;
 import com.jd.jr.eco.component.monitor.alarm.UmpAlarmSupport;
-import com.jd.jr.eco.component.monitor.annotation.DefaultMonitorAnnotationParser;
-import com.jd.jr.eco.component.monitor.annotation.Monitor;
-import com.jd.jr.eco.component.monitor.annotation.MonitorAnnotationParser;
 import com.jd.jr.eco.component.monitor.domain.*;
 import com.jd.jr.eco.component.monitor.interceptor.CandidateClassFilter;
 import com.jd.jr.eco.component.monitor.interceptor.MonitorAnnotationPointcut;
 import com.jd.jr.eco.component.monitor.interceptor.MonitorInterceptor;
+import com.jd.jr.eco.component.monitor.meta.DefaultMonitorAnnotationParser;
+import com.jd.jr.eco.component.monitor.meta.Monitor;
+import com.jd.jr.eco.component.monitor.meta.MonitorAnnotationParser;
 import com.jd.jr.eco.component.monitor.starter.adapter.MonitorPointcutAdapter;
 import com.jd.jr.eco.component.monitor.support.ResultConvertSupport;
 import org.aopalliance.aop.Advice;
@@ -22,6 +22,7 @@ import org.springframework.aop.support.ComposablePointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcher;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -49,6 +50,7 @@ public class MonitorConfiguration {
     @Bean
     @ConfigurationProperties(prefix = UMP_CONFIG_PRE)
     @ConditionalOnProperty(prefix = UMP_CONFIG_PRE,name = "enable",havingValue = "true")
+    @ConditionalOnClass(name = {"com.jd.ump.profiler.proxy.Profiler"})
     public UmpConfig umpConfig(){
         return new UmpConfig();
     }
@@ -56,6 +58,7 @@ public class MonitorConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = UMP_CONFIG_PRE,name = "enable",havingValue = "true")
+    @ConditionalOnClass(name = {"com.jd.ump.profiler.proxy.Profiler"})
     public UmpAlarmSupport umpAlarmSupport(){
         return new UmpAlarmSupport(umpConfig());
     }

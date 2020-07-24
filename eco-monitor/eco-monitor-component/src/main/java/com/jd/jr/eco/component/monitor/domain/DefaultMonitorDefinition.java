@@ -1,5 +1,8 @@
 package com.jd.jr.eco.component.monitor.domain;
 
+
+import com.jd.jr.eco.component.monitor.meta.ProfEnum;
+
 /**
  * @author wangjianqiang24
  * @date 2020/5/29

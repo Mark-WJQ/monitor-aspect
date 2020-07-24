@@ -1,7 +1,8 @@
 package com.jd.jr.eco.component.monitor.domain;
 
 
-import com.jd.jr.eco.component.monitor.annotation.Monitor;
+import com.jd.jr.eco.component.monitor.meta.Monitor;
+import com.jd.jr.eco.component.monitor.meta.ProfEnum;
 
 import java.lang.annotation.Annotation;
 

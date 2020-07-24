@@ -1,7 +1,7 @@
 package com.jd.jr.eco.component.monitor.alarm;
 
+import com.jd.jr.eco.component.monitor.meta.ProfEnum;
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
-import com.jd.jr.eco.component.monitor.domain.ProfEnum;
 import com.jd.jr.eco.component.monitor.domain.UmpConfig;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
