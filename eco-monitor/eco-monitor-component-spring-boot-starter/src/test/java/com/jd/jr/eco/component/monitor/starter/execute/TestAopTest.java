@@ -1,11 +1,11 @@
 package com.jd.jr.eco.component.monitor.starter.execute;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
 
 
 /**
@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @SpringBootTest(classes = TestAop.class)
 @EnableAutoConfiguration
-@RunWith(SpringRunner.class)
 public class TestAopTest {
 
     @Autowired
@@ -22,6 +21,6 @@ public class TestAopTest {
 
     @Test
     public void monitor() {
-        testAop.monitor(null);
+        testAop.monitor(Arrays.asList("11111","3333"));
     }
 }

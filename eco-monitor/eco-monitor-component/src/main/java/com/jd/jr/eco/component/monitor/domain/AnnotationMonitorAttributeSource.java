@@ -1,17 +1,15 @@
 package com.jd.jr.eco.component.monitor.domain;
 
 import com.jd.jr.eco.component.monitor.meta.MonitorAnnotationParser;
+import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
 import org.springframework.aop.support.AopUtils;
-import org.springframework.core.MethodClassKey;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -22,18 +20,6 @@ import static org.springframework.util.ObjectUtils.isEmpty;
  * @date 2020/5/29
  */
 public class AnnotationMonitorAttributeSource implements MonitorAttributeSource {
-
-
-    private Map<Object, MonitorAttribute> cache = new ConcurrentHashMap<>();
-
-
-    private static final MonitorAttribute NULL_MONITOR_ATTRIBUTE = new DefaultMonitorAttribute() {
-
-        @Override
-        public String toString() {
-            return "null";
-        }
-    };
 
     /**
      * 监控整体配置
@@ -61,29 +47,14 @@ public class AnnotationMonitorAttributeSource implements MonitorAttributeSource 
      */
     @Override
     public MonitorAttribute getMonitorAttribute(Method method, Class<?> target) {
-        Object cacheKey = getCacheKey(method, target);
-        MonitorAttribute attribute = this.cache.get(cacheKey);
-        if (Objects.nonNull(attribute)) {
-            if (Objects.equals(attribute, NULL_MONITOR_ATTRIBUTE)) {
-                return null;
-            } else {
-                return attribute;
-            }
-        } else {
 
-            Tuple tuple = computeMonitorAttribue(method, target);
-            attribute = tuple.getAttribute();
-            if (Objects.isNull(attribute)) {
-                cache.put(cacheKey, NULL_MONITOR_ATTRIBUTE);
-            } else {
-                if (attribute instanceof DefaultMonitorAttribute) {
-                    //设置一些公共的值
-                    setKey(tuple, method);
-                    mergeAttribute(attribute);
-                }
-                cache.put(cacheKey, attribute);
-            }
+        Tuple tuple = computeMonitorAttribue(method, target);
+        MonitorAttribute attribute = tuple.getAttribute();
 
+        if (attribute instanceof DefaultMonitorAttribute) {
+            //设置一些公共的值
+            setKey(tuple, method);
+            mergeAttribute(attribute);
         }
         return attribute;
     }
@@ -234,15 +205,10 @@ public class AnnotationMonitorAttributeSource implements MonitorAttributeSource 
     }
 
 
-    protected Object getCacheKey(Method method, Class<?> targetClass) {
-        return new MethodClassKey(method, targetClass);
-    }
-
-
     /**
      * 二元类
      */
-   private class Tuple {
+    private class Tuple {
         AnnotatedElement element;
 
         MonitorAttribute attribute;

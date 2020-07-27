@@ -2,8 +2,11 @@ package com.jd.jr.eco.component.monitor.meta;
 
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
+import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.core.annotation.AnnotationAttributes;
 
 import java.lang.reflect.AnnotatedElement;
 
@@ -15,6 +18,9 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class DefaultMonitorAnnotationParser implements MonitorAnnotationParser {
 
+    private static Logger logger = LoggerFactory.getLogger(DefaultMonitorAnnotationParser.class);
+
+    private AttributeSourceSupport attributeSourceSupport;
 
     /**
      * 转换监控属性 从 给定的类或方法上
@@ -25,36 +31,33 @@ public class DefaultMonitorAnnotationParser implements MonitorAnnotationParser {
      */
     @Override
     public MonitorAttribute parserMonitorAnnotation(AnnotatedElement element) {
-
-        AnnotationAttributes attributes = AnnotatedElementUtils.findMergedAnnotationAttributes(
-                element, Monitor.class, false, false);
-        if (attributes != null) {
-            return parseMonitorAnnotation(attributes);
+        Monitor monitor = AnnotatedElementUtils.findMergedAnnotation(element,Monitor.class);
+        if (monitor != null) {
+           return parseMonitorAnnotation(monitor);
         } else {
             return null;
         }
     }
 
-
-    /**
-     * 转换监控属性
-     * @param attributes
-     * @return
-     */
-    protected MonitorAttribute parseMonitorAnnotation(AnnotationAttributes attributes) {
-
+    private MonitorAttribute parseMonitorAnnotation(Monitor monitor) {
         DefaultMonitorAttribute monitorAttribute = new DefaultMonitorAttribute();
-        monitorAttribute.setManual(attributes.getBoolean("manual"));
-        monitorAttribute.setAlarmCodes(attributes.getStringArray("alarmCodes"));
-        monitorAttribute.setAlarms((Class<? extends Throwable>[]) attributes.getClassArray("alarms"));
-        monitorAttribute.setErrors((Class<? extends Throwable>[]) attributes.getClassArray("errors"));
-        monitorAttribute.setErrorCodes(attributes.getStringArray("errorCodes"));
-        monitorAttribute.setIngoreCodes(attributes.getStringArray("ingoreCodes"));
-        monitorAttribute.setIngoreErrors((Class<? extends Throwable>[]) attributes.getClassArray("ingoreErrors"));
-        String key = attributes.getString("key");
-        monitorAttribute.setKey(key);
-        monitorAttribute.setMergeConfig(attributes.getBoolean("mergeConfig"));
-        monitorAttribute.setProfEnums((ProfEnum[]) attributes.get("profEnums"));
+        monitorAttribute.setSkip(monitor.skip());
+        monitorAttribute.setAlarmCodes(monitor.alarmCodes());
+        monitorAttribute.setAlarms(monitor.alarms());
+        monitorAttribute.setErrors(monitor.errors());
+        monitorAttribute.setErrorCodes(monitor.errorCodes());
+        monitorAttribute.setIngoreCodes(monitor.ingoreCodes());
+        monitorAttribute.setIngoreErrors(monitor.ingoreErrors());
+        monitorAttribute.setKey(monitor.key());
+        monitorAttribute.setMergeConfig(monitor.mergeConfig());
+        monitorAttribute.setProfEnums(monitor.profEnums());
+        monitorAttribute.setKeyCalculater(attributeSourceSupport.getKeyCalculater(monitor.keyCalculater()));
         return monitorAttribute;
+
+    }
+
+    @Autowired
+    public void setAttributeSourceSupport(AttributeSourceSupport attributeSourceSupport) {
+        this.attributeSourceSupport = attributeSourceSupport;
     }
 }

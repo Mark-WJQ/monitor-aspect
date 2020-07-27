@@ -1,5 +1,8 @@
 package com.jd.jr.eco.component.monitor.domain;
 
+import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
+import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -7,10 +10,14 @@ import java.lang.reflect.Method;
 
 /**
  * 配置读取监控信息
+ *
  * @author wangjianqiang24
  * @date 2020/6/1
  */
-public class ConfigMonitorAttributeSource implements MonitorAttributeSource{
+public class ConfigMonitorAttributeSource implements MonitorAttributeSource {
+
+
+    private AttributeSourceSupport attributeSourceSupport;
 
     /**
      * 配置信息
@@ -18,8 +25,8 @@ public class ConfigMonitorAttributeSource implements MonitorAttributeSource{
     private MonitorConfig monitorConfig;
 
     public ConfigMonitorAttributeSource(MonitorConfig monitorConfig) {
-        Assert.notNull(monitorConfig,"监控配置为空请检查");
-        Assert.hasLength(monitorConfig.getAppName(),"监控appName为空");
+        Assert.notNull(monitorConfig, "监控配置为空请检查");
+        Assert.hasLength(monitorConfig.getAppName(), "监控appName为空");
         this.monitorConfig = monitorConfig;
     }
 
@@ -42,13 +49,19 @@ public class ConfigMonitorAttributeSource implements MonitorAttributeSource{
         monitorAttribute.setIngoreErrors(monitorConfig.getIngoreExceptions());
         monitorAttribute.setAppName(monitorConfig.getAppName());
         monitorAttribute.setProfEnums(monitorConfig.getProfEnums());
-        if (StringUtils.hasLength(monitorConfig.getKeyPre())){
-            String key = String.join(".",monitorConfig.getKeyPre(),method.getDeclaringClass().getSimpleName(),method.getName());
+        if (StringUtils.hasLength(monitorConfig.getKeyPre())) {
+            String key = String.join(".", monitorConfig.getKeyPre(), method.getDeclaringClass().getSimpleName(), method.getName());
             monitorAttribute.setKey(key);
-        }else {
-            String key = String.join(".",method.getDeclaringClass().getName(),method.getName());
+        } else {
+            String key = String.join(".", method.getDeclaringClass().getName(), method.getName());
             monitorAttribute.setKey(key);
-        }
+        };
+        monitorAttribute.setKeyCalculater(attributeSourceSupport.getKeyCalculater(monitorConfig.getKeyCalculater()));
         return monitorAttribute;
+    }
+
+    @Autowired
+    public void setAttributeSourceSupport(AttributeSourceSupport attributeSourceSupport) {
+        this.attributeSourceSupport = attributeSourceSupport;
     }
 }

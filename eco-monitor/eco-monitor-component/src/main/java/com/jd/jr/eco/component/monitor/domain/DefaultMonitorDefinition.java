@@ -2,6 +2,7 @@ package com.jd.jr.eco.component.monitor.domain;
 
 
 import com.jd.jr.eco.component.monitor.meta.ProfEnum;
+import com.jd.jr.eco.component.monitor.support.KeyCalculater;
 
 /**
  * @author wangjianqiang24
@@ -72,13 +73,19 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
 
     /**
      * 是否进行手动监控
+     * 如果设置为true，则该方法不纳入自动监控的方位，需要开发自己在方法里增加监控
      */
-    private boolean manual;
+    private boolean skip;
 
     /**
      * 监控指标类型
      */
     private ProfEnum[] profEnums;
+
+    /**
+     * 对monitorKey进行计算
+     */
+    private KeyCalculater keyCalculater;
 
 
     @Override
@@ -152,8 +159,8 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
      * @return
      */
     @Override
-    public boolean manual() {
-        return this.manual;
+    public boolean skip() {
+        return this.skip;
     }
 
     /**
@@ -164,6 +171,17 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
     @Override
     public ProfEnum[] getProfEnums() {
         return this.profEnums;
+    }
+
+
+    /**
+     * 获取唯一标识计算器
+     *
+     * @return
+     */
+    @Override
+    public KeyCalculater getKeyCalculater() {
+        return this.keyCalculater;
     }
 
     public void setIngoreCodes(String[] ingoreCodes) {
@@ -180,11 +198,16 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
         return this.appName;
     }
 
-    public void setManual(boolean manual) {
-        this.manual = manual;
+    public void setSkip(boolean skip) {
+        this.skip = skip;
     }
 
     public void setProfEnums(ProfEnum[] profEnums) {
         this.profEnums = profEnums;
     }
+
+    public void setKeyCalculater(KeyCalculater keyCalculater) {
+        this.keyCalculater = keyCalculater;
+    }
+
 }

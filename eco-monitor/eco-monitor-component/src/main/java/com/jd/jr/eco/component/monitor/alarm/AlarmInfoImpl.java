@@ -10,9 +10,15 @@ import com.jd.jr.eco.component.result.Result;
 public class AlarmInfoImpl implements AlarmInfo {
 
 
+    private String key;
+
    private Result result;
 
    private Throwable t;
+
+    public AlarmInfoImpl(String key) {
+        this.key = key;
+    }
 
     /**
      * 设置报警信息
@@ -44,5 +50,36 @@ public class AlarmInfoImpl implements AlarmInfo {
         return t != null;
     }
 
+    public String getKey() {
+        return key;
+    }
 
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public Throwable getT() {
+        return t;
+    }
+
+    public void setT(Throwable t) {
+        this.t = t;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"key\":\"")
+                .append(key).append('\"');
+        sb.append(",\"result\":")
+                .append(result);
+        sb.append(",\"t\":")
+                .append(t);
+        sb.append("}");
+        return sb.toString();
+    }
 }

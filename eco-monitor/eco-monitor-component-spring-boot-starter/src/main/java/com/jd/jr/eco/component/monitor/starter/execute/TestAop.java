@@ -17,7 +17,7 @@ public class TestAop implements TestAopInf<List> {
 
 
     @Override
-    @Monitor(key = "hahahhah")
+    @Monitor(key = "#{[0][0]}.hahahhah",keyCalculater = "springELKeyCalculater")
     public Result monitor(List list){
         System.out.println("--------------------------------");
         return new Result() {

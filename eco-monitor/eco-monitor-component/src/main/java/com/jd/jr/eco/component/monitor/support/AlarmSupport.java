@@ -1,6 +1,7 @@
-package com.jd.jr.eco.component.monitor.alarm;
+package com.jd.jr.eco.component.monitor.support;
 
 
+import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
 
 import java.lang.reflect.Method;

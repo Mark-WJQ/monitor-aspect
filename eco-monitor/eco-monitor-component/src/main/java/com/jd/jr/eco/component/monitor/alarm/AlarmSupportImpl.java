@@ -1,6 +1,7 @@
 package com.jd.jr.eco.component.monitor.alarm;
 
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
+import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +28,8 @@ public class AlarmSupportImpl implements AlarmSupport<AlarmInfoImpl, DefaultMoni
      */
     @Override
     public AlarmInfo registerInfo(Method method, Class targetClass,Object[] arguments, DefaultMonitorAttribute attribute) {
-        logger.info("开始记录");
-        return new AlarmInfoImpl();
+        logger.info("开始记录:{}",attribute.getKey());
+        return new AlarmInfoImpl(attribute.getKey());
     }
 
     /**

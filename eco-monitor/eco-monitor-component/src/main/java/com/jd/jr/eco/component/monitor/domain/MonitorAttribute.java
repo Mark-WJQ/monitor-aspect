@@ -63,4 +63,11 @@ public interface MonitorAttribute extends MonitorDefinition {
      */
     boolean mergeConfig();
 
+    /**
+     * 重新设置唯一标识
+     * 主要用来在有el表达式或其他重新解析时重新设置
+     * @param key
+     */
+    void resetKey(String key);
+
 }

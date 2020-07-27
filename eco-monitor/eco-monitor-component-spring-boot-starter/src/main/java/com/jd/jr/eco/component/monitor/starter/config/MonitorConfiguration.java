@@ -1,18 +1,27 @@
 package com.jd.jr.eco.component.monitor.starter.config;
 
 
-import com.jd.jr.eco.component.monitor.alarm.AlarmSupport;
 import com.jd.jr.eco.component.monitor.alarm.AlarmSupportImpl;
-import com.jd.jr.eco.component.monitor.alarm.UmpAlarmSupport;
-import com.jd.jr.eco.component.monitor.domain.*;
+import com.jd.jr.eco.component.monitor.domain.AnnotationMonitorAttributeSource;
+import com.jd.jr.eco.component.monitor.domain.CachedAttributeSource;
+import com.jd.jr.eco.component.monitor.domain.CompositeMonitorAttributeSource;
+import com.jd.jr.eco.component.monitor.domain.ConfigMonitorAttributeSource;
+import com.jd.jr.eco.component.monitor.domain.MonitorAttributeSource;
 import com.jd.jr.eco.component.monitor.interceptor.CandidateClassFilter;
 import com.jd.jr.eco.component.monitor.interceptor.MonitorAnnotationPointcut;
 import com.jd.jr.eco.component.monitor.interceptor.MonitorInterceptor;
 import com.jd.jr.eco.component.monitor.meta.DefaultMonitorAnnotationParser;
 import com.jd.jr.eco.component.monitor.meta.Monitor;
 import com.jd.jr.eco.component.monitor.meta.MonitorAnnotationParser;
+import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
+import com.jd.jr.eco.component.monitor.meta.UmpConfig;
 import com.jd.jr.eco.component.monitor.starter.adapter.MonitorPointcutAdapter;
+import com.jd.jr.eco.component.monitor.support.AlarmSupport;
+import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
+import com.jd.jr.eco.component.monitor.support.KeyCalculater;
 import com.jd.jr.eco.component.monitor.support.ResultConvertSupport;
+import com.jd.jr.eco.component.monitor.support.SpringELKeyCalculater;
+import com.jd.jr.eco.component.monitor.support.UmpAlarmSupport;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
@@ -22,6 +31,7 @@ import org.springframework.aop.support.ComposablePointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcher;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -34,32 +44,33 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static com.jd.jr.eco.component.monitor.domain.UmpConfig.UMP_CONFIG_PRE;
+import static com.jd.jr.eco.component.monitor.meta.UmpConfig.UMP_CONFIG_PRE;
 
 /**
  * 初始化 configuration
+ *
  * @author wangjianqiang24
  * @date 2020/5/29
  */
 @Configuration
 @EnableConfigurationProperties(MonitorEnable.class)
-@ConditionalOnProperty(prefix = MonitorEnable.PRE,name = "enable", havingValue = "true")
+@ConditionalOnProperty(prefix = MonitorEnable.PRE, name = "enable", havingValue = "true")
 public class MonitorConfiguration {
 
 
     @Bean
     @ConfigurationProperties(prefix = UMP_CONFIG_PRE)
-    @ConditionalOnProperty(prefix = UMP_CONFIG_PRE,name = "enable",havingValue = "true")
+    @ConditionalOnProperty(prefix = UMP_CONFIG_PRE, name = "enable", havingValue = "true")
     @ConditionalOnClass(name = {"com.jd.ump.profiler.proxy.Profiler"})
-    public UmpConfig umpConfig(){
+    public UmpConfig umpConfig() {
         return new UmpConfig();
     }
 
 
     @Bean
-    @ConditionalOnProperty(prefix = UMP_CONFIG_PRE,name = "enable",havingValue = "true")
+    @ConditionalOnProperty(prefix = UMP_CONFIG_PRE, name = "enable", havingValue = "true")
     @ConditionalOnClass(name = {"com.jd.ump.profiler.proxy.Profiler"})
-    public UmpAlarmSupport umpAlarmSupport(){
+    public UmpAlarmSupport umpAlarmSupport() {
         return new UmpAlarmSupport(umpConfig());
     }
 
@@ -67,12 +78,13 @@ public class MonitorConfiguration {
     @Bean
     @ConfigurationProperties(prefix = MonitorConfig.MONITOR_PRE)
     @ConditionalOnMissingBean
-    public MonitorConfig monitorConfig(){
+    public MonitorConfig monitorConfig() {
         return new MonitorConfig();
     }
 
 
     @Bean
+    @ConditionalOnBean(name = "monitorConfig", value = MonitorConfig.class)
     @ConditionalOnProperty(prefix = MonitorConfig.MONITOR_PRE, name = "expression")
     public MonitorPointcutAdapter expressionPointcut(MonitorConfig monitorConfig) {
         AspectJExpressionPointcut pointCut = new AspectJExpressionPointcut();
@@ -81,10 +93,11 @@ public class MonitorConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean(name = "monitorConfig", value = MonitorConfig.class)
     @ConditionalOnProperty(prefix = MonitorConfig.MONITOR_PRE, name = "annotation")
     public MonitorPointcutAdapter annotationMatchingPointcut(MonitorConfig monitorConfig, ObjectProvider<CandidateClassFilter> classFilter) {
-        if (classFilter.getIfAvailable() != null){
-            Pointcut pointcut = new MonitorAnnotationPointcut(monitorConfig.getAnnotation(),classFilter.getIfAvailable());
+        if (classFilter.getIfAvailable() != null) {
+            Pointcut pointcut = new MonitorAnnotationPointcut(monitorConfig.getAnnotation(), classFilter.getIfAvailable());
             return new MonitorPointcutAdapter(pointcut);
         }
         return getAnnoAdapter(monitorConfig.getAnnotation());
@@ -142,7 +155,7 @@ public class MonitorConfiguration {
         AnnotationMonitorAttributeSource annotationMonitorAttributeSource = new AnnotationMonitorAttributeSource(monitorConfig, annotationParsers);
         ConfigMonitorAttributeSource configMonitorAttributeSource = new ConfigMonitorAttributeSource(monitorConfig);
         CompositeMonitorAttributeSource source = new CompositeMonitorAttributeSource(annotationMonitorAttributeSource, configMonitorAttributeSource);
-        return source;
+        return new CachedAttributeSource(source);
     }
 
 
@@ -160,7 +173,17 @@ public class MonitorConfiguration {
     }
 
 
-    private  class FALSEPointcut implements Pointcut {
+    @Bean
+    public KeyCalculater springELKeyCalculater() {
+        return new SpringELKeyCalculater();
+    }
+
+    @Bean
+    public AttributeSourceSupport attributeSourceSupport() {
+        return new AttributeSourceSupport();
+    }
+
+    private class FALSEPointcut implements Pointcut {
 
         @Override
         public ClassFilter getClassFilter() {

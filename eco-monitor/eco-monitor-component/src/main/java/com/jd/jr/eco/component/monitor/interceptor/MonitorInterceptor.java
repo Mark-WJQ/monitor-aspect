@@ -2,9 +2,11 @@ package com.jd.jr.eco.component.monitor.interceptor;
 
 
 import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
-import com.jd.jr.eco.component.monitor.alarm.AlarmSupport;
+import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttributeSource;
+import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
+import com.jd.jr.eco.component.monitor.support.KeyCalParam;
 import com.jd.jr.eco.component.monitor.support.ResultConvertSupport;
 import com.jd.jr.eco.component.result.Result;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -68,7 +70,7 @@ public class MonitorInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         MonitorAttribute attribute = getAttribute(invocation);
-        if (Objects.isNull(attribute) || attribute.manual()) {
+        if (Objects.isNull(attribute) || attribute.skip()) {
             return invocation.proceed();
         }
         AlarmInfo alarmInfo = registerInfo(invocation, attribute);
@@ -103,11 +105,24 @@ public class MonitorInterceptor implements MethodInterceptor {
     private AlarmInfo registerInfo(MethodInvocation invocation, MonitorAttribute attribute) {
         AlarmInfo alarmInfo = null;
         try {
+            resetKey(invocation, attribute);
             alarmInfo = alarmSupport.registerInfo(invocation.getMethod(), AopUtils.getTargetClass(invocation.getThis()), invocation.getArguments(), attribute);
         } catch (Throwable t) {
             logger.error("注册监控信息异常", t);
         }
         return alarmInfo;
+    }
+
+    private void resetKey(MethodInvocation invocation, MonitorAttribute attribute) {
+        if (Objects.nonNull(attribute.getKeyCalculater()) && !(attribute.getKeyCalculater() == AttributeSourceSupport.NON_CALCULATER)) {
+            KeyCalParam param = new KeyCalParam(invocation.getMethod(),invocation.getArguments());
+            String newKey = attribute.getKeyCalculater().calculate(param, attribute);
+            if (StringUtils.isEmpty(newKey)) {
+                logger.warn("the method:{} calculate new key is null,oldkey is:{}", invocation.getMethod().getName(), attribute.getKey());
+                return;
+            }
+            attribute.resetKey(newKey);
+        }
     }
 
 

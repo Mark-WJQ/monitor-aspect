@@ -1,10 +1,8 @@
-package com.jd.jr.eco.component.monitor.domain;
+package com.jd.jr.eco.component.monitor.meta;
 
-
-import com.jd.jr.eco.component.monitor.meta.Monitor;
-import com.jd.jr.eco.component.monitor.meta.ProfEnum;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 
 /**
  * 监控配置类
@@ -78,6 +76,22 @@ public class MonitorConfig {
      */
     private ProfEnum[] profEnums = {ProfEnum.TP,ProfEnum.FunctionError};
 
+    /**
+     * 计算唯一标识计算器
+     * 建议在方法上单独配置，如果在全局配置的话，会导致不需要计算的key也会计算一遍，会消耗一定的时间
+     * 该配置是springContext中key
+     * @return
+     */
+   private String keyCalculater;
+
+
+    public String getKeyCalculater() {
+        return keyCalculater;
+    }
+
+    public void setKeyCalculater(String keyCalculater) {
+        this.keyCalculater = keyCalculater;
+    }
 
     public ProfEnum[] getProfEnums() {
         return profEnums;
@@ -167,4 +181,34 @@ public class MonitorConfig {
         this.ingoreCodes = ingoreCodes;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"expression\":\"")
+                .append(expression).append('\"');
+        sb.append(",\"annotation\":")
+                .append(annotation);
+        sb.append(",\"appName\":\"")
+                .append(appName).append('\"');
+        sb.append(",\"keyPre\":\"")
+                .append(keyPre).append('\"');
+        sb.append(",\"alarmExceptions\":")
+                .append(Arrays.toString(alarmExceptions));
+        sb.append(",\"errorExceptions\":")
+                .append(Arrays.toString(errorExceptions));
+        sb.append(",\"ingoreExceptions\":")
+                .append(Arrays.toString(ingoreExceptions));
+        sb.append(",\"errorCodes\":")
+                .append(Arrays.toString(errorCodes));
+        sb.append(",\"alarmCodes\":")
+                .append(Arrays.toString(alarmCodes));
+        sb.append(",\"ingoreCodes\":")
+                .append(Arrays.toString(ingoreCodes));
+        sb.append(",\"profEnums\":")
+                .append(Arrays.toString(profEnums));
+        sb.append(",\"keyCalculater\":\"")
+                .append(keyCalculater).append('\"');
+        sb.append("}");
+        return sb.toString();
+    }
 }

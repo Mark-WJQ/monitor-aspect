@@ -29,7 +29,6 @@ public class CompositeMonitorAttributeSource implements MonitorAttributeSource {
      */
     @Override
     public MonitorAttribute getMonitorAttribute(Method method, Class<?> target) {
-
         for (MonitorAttributeSource source : this.monitorAttributeSources){
             MonitorAttribute attribute = source.getMonitorAttribute(method,target);
             if (attribute != null){

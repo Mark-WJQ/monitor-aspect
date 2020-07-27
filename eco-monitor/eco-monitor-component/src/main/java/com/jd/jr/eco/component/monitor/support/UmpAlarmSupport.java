@@ -1,8 +1,10 @@
-package com.jd.jr.eco.component.monitor.alarm;
+package com.jd.jr.eco.component.monitor.support;
 
+import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
+import com.jd.jr.eco.component.monitor.alarm.UmpAlarmInfo;
 import com.jd.jr.eco.component.monitor.meta.ProfEnum;
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
-import com.jd.jr.eco.component.monitor.domain.UmpConfig;
+import com.jd.jr.eco.component.monitor.meta.UmpConfig;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
 import org.slf4j.Logger;
