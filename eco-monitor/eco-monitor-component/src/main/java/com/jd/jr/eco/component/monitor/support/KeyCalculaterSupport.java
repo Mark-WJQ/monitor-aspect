@@ -7,7 +7,7 @@ import com.jd.jr.eco.component.monitor.domain.MonitorDefinition;
  * @author wangjianqiang24
  * @date 2020/7/24
  */
-public interface KeyCalculater {
+public interface KeyCalculaterSupport {
 
     /**
      * 开始计算

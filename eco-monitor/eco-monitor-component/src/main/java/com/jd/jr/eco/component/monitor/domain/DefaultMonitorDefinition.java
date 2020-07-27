@@ -2,7 +2,9 @@ package com.jd.jr.eco.component.monitor.domain;
 
 
 import com.jd.jr.eco.component.monitor.meta.ProfEnum;
-import com.jd.jr.eco.component.monitor.support.KeyCalculater;
+import com.jd.jr.eco.component.monitor.support.KeyCalculaterSupport;
+import com.jd.jr.eco.component.monitor.support.ResultConverterSupport;
+import com.jd.jr.eco.component.result.Result;
 
 /**
  * @author wangjianqiang24
@@ -85,7 +87,12 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
     /**
      * 对monitorKey进行计算
      */
-    private KeyCalculater keyCalculater;
+    private KeyCalculaterSupport keyCalculater;
+
+    /**
+     * 结果转换器
+     */
+    private ResultConverterSupport resultConverter;
 
 
     @Override
@@ -180,8 +187,19 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
      * @return
      */
     @Override
-    public KeyCalculater getKeyCalculater() {
+    public KeyCalculaterSupport getKeyCalculater() {
         return this.keyCalculater;
+    }
+
+    /**
+     * 获取结果转换类型，如果方法执行返回结果类型不是 {@link Result} 的子类，
+     * 则需要将结果转换，以便能够在后续的流程中使用统一风格获取数据，减少分歧
+     *
+     * @return
+     */
+    @Override
+    public ResultConverterSupport getResultConverter() {
+        return this.resultConverter;
     }
 
     public void setIngoreCodes(String[] ingoreCodes) {
@@ -206,8 +224,11 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
         this.profEnums = profEnums;
     }
 
-    public void setKeyCalculater(KeyCalculater keyCalculater) {
+    public void setKeyCalculater(KeyCalculaterSupport keyCalculater) {
         this.keyCalculater = keyCalculater;
     }
 
+    public void setResultConverter(ResultConverterSupport resultConverter) {
+        this.resultConverter = resultConverter;
+    }
 }

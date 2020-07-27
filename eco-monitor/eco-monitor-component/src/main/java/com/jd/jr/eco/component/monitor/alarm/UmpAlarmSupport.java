@@ -1,9 +1,7 @@
-package com.jd.jr.eco.component.monitor.support;
+package com.jd.jr.eco.component.monitor.alarm;
 
-import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
-import com.jd.jr.eco.component.monitor.alarm.UmpAlarmInfo;
-import com.jd.jr.eco.component.monitor.meta.ProfEnum;
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
+import com.jd.jr.eco.component.monitor.meta.ProfEnum;
 import com.jd.jr.eco.component.monitor.meta.UmpConfig;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
@@ -20,7 +18,7 @@ import java.lang.reflect.Method;
  * @author wangjianqiang24
  * @date 2020/6/12
  */
-public class UmpAlarmSupport implements AlarmSupport<UmpAlarmInfo, DefaultMonitorAttribute>, InitializingBean {
+public class UmpAlarmSupport extends AbstractAlarmSupport<UmpAlarmInfo, DefaultMonitorAttribute> implements InitializingBean {
 
     private static Logger logger = LoggerFactory.getLogger(UmpAlarmSupport.class);
 
@@ -71,6 +69,7 @@ public class UmpAlarmSupport implements AlarmSupport<UmpAlarmInfo, DefaultMonito
         UmpAlarmInfo umpInfo = new UmpAlarmInfo(info);
         return umpInfo;
     }
+
 
     /**
      * 记录可用率

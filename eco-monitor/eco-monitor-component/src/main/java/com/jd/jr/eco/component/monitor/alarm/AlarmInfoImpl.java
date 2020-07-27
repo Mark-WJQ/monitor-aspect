@@ -62,13 +62,11 @@ public class AlarmInfoImpl implements AlarmInfo {
         return result;
     }
 
-    public Throwable getT() {
+    @Override
+    public Throwable getException() {
         return t;
     }
 
-    public void setT(Throwable t) {
-        this.t = t;
-    }
 
     @Override
     public String toString() {

@@ -2,6 +2,7 @@ package com.jd.jr.eco.component.monitor.starter.config;
 
 
 import com.jd.jr.eco.component.monitor.alarm.AlarmSupportImpl;
+import com.jd.jr.eco.component.monitor.alarm.UmpAlarmSupport;
 import com.jd.jr.eco.component.monitor.domain.AnnotationMonitorAttributeSource;
 import com.jd.jr.eco.component.monitor.domain.CachedAttributeSource;
 import com.jd.jr.eco.component.monitor.domain.CompositeMonitorAttributeSource;
@@ -18,10 +19,8 @@ import com.jd.jr.eco.component.monitor.meta.UmpConfig;
 import com.jd.jr.eco.component.monitor.starter.adapter.MonitorPointcutAdapter;
 import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
-import com.jd.jr.eco.component.monitor.support.KeyCalculater;
-import com.jd.jr.eco.component.monitor.support.ResultConvertSupport;
-import com.jd.jr.eco.component.monitor.support.SpringELKeyCalculater;
-import com.jd.jr.eco.component.monitor.support.UmpAlarmSupport;
+import com.jd.jr.eco.component.monitor.support.KeyCalculaterSupport;
+import com.jd.jr.eco.component.monitor.support.SpringELKeyCalculaterSupport;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
@@ -160,9 +159,8 @@ public class MonitorConfiguration {
 
 
     @Bean
-    public Advice monitorAdvice(AlarmSupport alarmSupport, MonitorAttributeSource attributeSource, ObjectProvider<ResultConvertSupport> convertSupport) {
+    public Advice monitorAdvice(AlarmSupport alarmSupport, MonitorAttributeSource attributeSource) {
         MonitorInterceptor interceptor = new MonitorInterceptor(alarmSupport, attributeSource);
-        interceptor.setResultConvertSupport(convertSupport.getIfAvailable());
         return interceptor;
     }
 
@@ -174,8 +172,8 @@ public class MonitorConfiguration {
 
 
     @Bean
-    public KeyCalculater springELKeyCalculater() {
-        return new SpringELKeyCalculater();
+    public KeyCalculaterSupport springELKeyCalculater() {
+        return new SpringELKeyCalculaterSupport();
     }
 
     @Bean

@@ -18,24 +18,35 @@ public class AttributeSourceSupport implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
-    public static final KeyCalculater NON_CALCULATER = (kp, def) -> {
-        logger.debug("don't cal anything,key:{}", def.getKey());
-        return def.getKey();
-    };
-
     /**
-     * 获取计算可以的算法
+     * 获取计算key的算法
      *
      * @param keyCalculater
-     * @return 如果根据给定的name在springcontext 中可以找到相应的bean则直接返回，如果没有则返回一个自定义的不执行任何逻辑的计算器
+     * @return 如果根据给定的name在springcontext 中可以找到相应的bean则直接返回，如果没有则返回 null
      */
-    public KeyCalculater getKeyCalculater(String keyCalculater) {
+    public KeyCalculaterSupport getKeyCalculater(String keyCalculater) {
         if (!StringUtils.hasText(keyCalculater) || !applicationContext.containsBean(keyCalculater)) {
             logger.warn("the key :{} of calculater can't find in context", keyCalculater);
-            return NON_CALCULATER;
+            return null;
         }
-        KeyCalculater calculater = applicationContext.getBean(keyCalculater, KeyCalculater.class);
+        KeyCalculaterSupport calculater = applicationContext.getBean(keyCalculater, KeyCalculaterSupport.class);
         return calculater;
+    }
+
+
+    /**
+     * 获取转换器
+     *
+     * @param resultConverter
+     * @return 如果根据给定的name在springcontext 中可以找到相应的bean则直接返回，如果没有则返回 null
+     */
+    public ResultConverterSupport getResultConverter(String resultConverter) {
+        if (!StringUtils.hasText(resultConverter) || !applicationContext.containsBean(resultConverter)) {
+            logger.warn("the key :{} of resultConverter can't find in context", resultConverter);
+            return null;
+        }
+        ResultConverterSupport converter = applicationContext.getBean(resultConverter, ResultConverterSupport.class);
+        return converter;
     }
 
 

@@ -1,8 +1,6 @@
 package com.jd.jr.eco.component.monitor.domain;
 
 import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
-import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -15,9 +13,6 @@ import java.lang.reflect.Method;
  * @date 2020/6/1
  */
 public class ConfigMonitorAttributeSource implements MonitorAttributeSource {
-
-
-    private AttributeSourceSupport attributeSourceSupport;
 
     /**
      * 配置信息
@@ -56,12 +51,7 @@ public class ConfigMonitorAttributeSource implements MonitorAttributeSource {
             String key = String.join(".", method.getDeclaringClass().getName(), method.getName());
             monitorAttribute.setKey(key);
         };
-        monitorAttribute.setKeyCalculater(attributeSourceSupport.getKeyCalculater(monitorConfig.getKeyCalculater()));
         return monitorAttribute;
     }
 
-    @Autowired
-    public void setAttributeSourceSupport(AttributeSourceSupport attributeSourceSupport) {
-        this.attributeSourceSupport = attributeSourceSupport;
-    }
 }

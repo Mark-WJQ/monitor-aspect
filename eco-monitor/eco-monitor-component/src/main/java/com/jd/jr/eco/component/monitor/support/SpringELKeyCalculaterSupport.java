@@ -19,9 +19,9 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * @author wangjianqiang24
  * @date 2020/7/24
  */
-public class SpringELKeyCalculater implements KeyCalculater {
+public class SpringELKeyCalculaterSupport implements KeyCalculaterSupport {
 
-    private static Logger logger = LoggerFactory.getLogger(SpringELKeyCalculater.class);
+    private static Logger logger = LoggerFactory.getLogger(SpringELKeyCalculaterSupport.class);
     private static ExpressionParser parser = new SpelExpressionParser();
     private static ParserContext parserContext = new TemplateParserContext();
 

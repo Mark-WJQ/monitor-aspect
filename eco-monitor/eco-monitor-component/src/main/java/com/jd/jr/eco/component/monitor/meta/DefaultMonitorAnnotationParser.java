@@ -52,6 +52,7 @@ public class DefaultMonitorAnnotationParser implements MonitorAnnotationParser {
         monitorAttribute.setMergeConfig(monitor.mergeConfig());
         monitorAttribute.setProfEnums(monitor.profEnums());
         monitorAttribute.setKeyCalculater(attributeSourceSupport.getKeyCalculater(monitor.keyCalculater()));
+        monitorAttribute.setResultConverter(attributeSourceSupport.getResultConverter(monitor.resultConverter()));
         return monitorAttribute;
 
     }

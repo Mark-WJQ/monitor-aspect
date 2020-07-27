@@ -2,12 +2,11 @@ package com.jd.jr.eco.component.monitor.interceptor;
 
 
 import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
-import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
 import com.jd.jr.eco.component.monitor.domain.MonitorAttributeSource;
-import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
+import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import com.jd.jr.eco.component.monitor.support.KeyCalParam;
-import com.jd.jr.eco.component.monitor.support.ResultConvertSupport;
+import com.jd.jr.eco.component.monitor.support.ResultConverterSupport;
 import com.jd.jr.eco.component.result.Result;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -43,10 +42,7 @@ public class MonitorInterceptor implements MethodInterceptor {
      */
     private MonitorAttributeSource attributeSource;
 
-    /**
-     * 结果转换辅助
-     */
-    private ResultConvertSupport resultConvertSupport;
+
 
 
     /**
@@ -62,11 +58,6 @@ public class MonitorInterceptor implements MethodInterceptor {
         this.attributeSource = attributeSource;
     }
 
-
-    public void setResultConvertSupport(ResultConvertSupport resultConvertSupport) {
-        this.resultConvertSupport = resultConvertSupport;
-    }
-
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         MonitorAttribute attribute = getAttribute(invocation);
@@ -80,14 +71,14 @@ public class MonitorInterceptor implements MethodInterceptor {
         try {
             Object result = invocation.proceed();
             if (Objects.nonNull(result)) {
-                Result r = getResult(result);
+                Result r = getResult(result, attribute.getResultConverter());
                 if (Objects.nonNull(r)) {
-                    handleCode(attribute, r, alarmInfo);
+                    recordCode(attribute, r, alarmInfo);
                 }
             }
             return result;
         } catch (Throwable e) {
-            handleError(attribute, e, alarmInfo);
+            recordError(attribute, e, alarmInfo);
             throw e;
         } finally {
             end(alarmInfo);
@@ -114,8 +105,8 @@ public class MonitorInterceptor implements MethodInterceptor {
     }
 
     private void resetKey(MethodInvocation invocation, MonitorAttribute attribute) {
-        if (Objects.nonNull(attribute.getKeyCalculater()) && !(attribute.getKeyCalculater() == AttributeSourceSupport.NON_CALCULATER)) {
-            KeyCalParam param = new KeyCalParam(invocation.getMethod(),invocation.getArguments());
+        if (Objects.nonNull(attribute.getKeyCalculater())) {
+            KeyCalParam param = new KeyCalParam(invocation.getMethod(), invocation.getArguments());
             String newKey = attribute.getKeyCalculater().calculate(param, attribute);
             if (StringUtils.isEmpty(newKey)) {
                 logger.warn("the method:{} calculate new key is null,oldkey is:{}", invocation.getMethod().getName(), attribute.getKey());
@@ -147,22 +138,10 @@ public class MonitorInterceptor implements MethodInterceptor {
      * @param e         异常
      * @param alarmInfo 注册报警信息
      */
-    private void handleError(MonitorAttribute attribute, Throwable e, AlarmInfo alarmInfo) {
+    private void recordError(MonitorAttribute attribute, Throwable e, AlarmInfo alarmInfo) {
         try {
             alarmInfo.setException(e);
-            if (attribute.ingoreError(e)) {
-                //donothing or just log
-                alarmSupport.ingore(alarmInfo);
-            } else {
-                if (attribute.error(e)) {
-                    //记录可用率
-                    alarmSupport.functionError(alarmInfo);
-                }
-                if (attribute.alarm(e)) {
-                    //报警记录
-                    alarmSupport.alarm(alarmInfo);
-                }
-            }
+            alarmSupport.record(alarmInfo, attribute);
         } catch (Throwable t) {
             logger.error("监控处理异常请注意", t);
         }
@@ -175,25 +154,17 @@ public class MonitorInterceptor implements MethodInterceptor {
      * @param result
      * @param alarmInfo
      */
-    private void handleCode(MonitorAttribute attribute, Result result, AlarmInfo alarmInfo) {
+    private void recordCode(MonitorAttribute attribute, Result result, AlarmInfo alarmInfo) {
         try {
             alarmInfo.setResult(result);
             String code = result.getCode();
             if (StringUtils.isEmpty(code)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("key:{},未转换出code,直接返回不做记录", attribute.getKey());
+                }
                 return;
             }
-            if (attribute.ingoreCode(code)) {
-                alarmSupport.ingore(alarmInfo);
-            } else {
-                if (attribute.errorCode(code)) {
-                    // 记录可用率
-                    alarmSupport.functionError(alarmInfo);
-                }
-                if (attribute.alarmCode(code)) {
-                    // 报警记录
-                    alarmSupport.alarm(alarmInfo);
-                }
-            }
+            alarmSupport.record(alarmInfo, attribute);
         } catch (Throwable t) {
             //忽略以免影响正常流程，或是日志记录
             logger.error("监控处理异常请注意", t);
@@ -201,13 +172,13 @@ public class MonitorInterceptor implements MethodInterceptor {
     }
 
 
-    private Result getResult(Object result) {
+    private Result getResult(Object result, ResultConverterSupport resultConverter) {
         try {
             if (result instanceof Result) {
                 return (Result) result;
             } else {
-                if (Objects.nonNull(resultConvertSupport)) {
-                    return resultConvertSupport.convert(result);
+                if (Objects.nonNull(resultConverter)) {
+                    return resultConverter.convert(result);
                 }
             }
         } catch (Throwable t) {

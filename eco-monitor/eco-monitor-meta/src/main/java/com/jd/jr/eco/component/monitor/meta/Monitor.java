@@ -22,14 +22,14 @@ public @interface Monitor {
      * 如果key是从类上的注解中取得并且不为空，则认为该key为每个方法key的前缀，在进行组装时会 {@code key + "." + method.name()}
      * 如果key是从方法注解上取得并且不为空，则可以直接使用
      * 如果该注解中的key为空
-     * 1. 如果 {@link MonitorConfig#getKeyPre()} 不为空,则 {@code key = String.join(".", monitorConfig.getKeyPre(), method.getDeclaringClass().getSimpleName(), method.getName())}
-     * 2. 否则 {@code key = String.join(".", method.getDeclaringClass().getName(), method.getName())}
+     * 1. 如果 {@link MonitorConfig#getKeyPre()} 为空,则将keyPre设置为app.name
+     * 则 {@code key = String.join(".", monitorConfig.getKeyPre(), method.getDeclaringClass().getSimpleName(), method.getName())}
      * <p>
-     * 该key可以使用占位符，可以自定义，通过实现接口 {@link com.jd.jr.eco.component.monitor.support.KeyCalculater} 并将bean引用设置到 {@link Monitor#keyCalculater()} 或 {@link MonitorConfig#keyCalculater}生效
+     * 该key可以使用占位符，可以自定义，通过实现接口 {@link com.jd.jr.eco.component.monitor.support.KeyCalculaterSupport} 并将bean引用设置到 {@link Monitor#keyCalculater()}
      * 可以参考实现
      *
      * @return
-     * @see com.jd.jr.eco.component.monitor.support.SpringELKeyCalculater
+     * @see com.jd.jr.eco.component.monitor.support.SpringELKeyCalculaterSupport
      * eg: ${app.name}.className.methodName, app.name 是占位符标识，会在上下文配置中查找对应的配置，如果找不到则原样返回
      */
     String key() default "";
@@ -98,10 +98,11 @@ public @interface Monitor {
      * {@link Monitor#ingoreCodes()},{@link Monitor#errorCodes()},
      * {@link Monitor#alarmCodes()},{@link Monitor#ingoreErrors()},
      * {@link Monitor#errors()},{@link Monitor#alarms()}
-     *
+     * <p>
      * 前提是 {@link MonitorConfig} 中的配置不为空
      * 配置为 {@code true} 进行合并
      * false 跳过不处理
+     *
      * @return
      */
     boolean mergeConfig() default true;
@@ -132,6 +133,14 @@ public @interface Monitor {
      * @return
      */
     String keyCalculater() default "";
+
+    /**
+     * 方法结果执行转换器,如果方法执行返回结果类型不是 {@link com.jd.jr.eco.component.result.Result} 的子类，
+     * 则需要将结果转换，以便能够在后续的流程中使用统一风格获取数据，减少分歧
+     *
+     * @return
+     */
+    String resultConverter() default "";
 
 
 }

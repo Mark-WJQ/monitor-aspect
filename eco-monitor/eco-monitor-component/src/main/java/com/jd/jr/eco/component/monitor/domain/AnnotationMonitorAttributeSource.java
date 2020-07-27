@@ -75,12 +75,11 @@ public class AnnotationMonitorAttributeSource implements MonitorAttributeSource 
         if (StringUtils.isEmpty(attribute.getKey())) {
             ((DefaultMonitorAttribute) attribute).setAppName(monitorConfig.getAppName());
             if (StringUtils.isEmpty(attribute.getKey())) {
-                String key;
-                if (StringUtils.hasLength(monitorConfig.getKeyPre())) {
-                    key = String.join(".", monitorConfig.getKeyPre(), method.getDeclaringClass().getSimpleName(), method.getName());
-                } else {
-                    key = String.join(".", method.getDeclaringClass().getName(), method.getName());
+                String keyPre = monitorConfig.getKeyPre();
+                if (!StringUtils.hasText(keyPre)) {
+                    keyPre = monitorConfig.getAppName();
                 }
+                String key = String.join(".", keyPre, method.getDeclaringClass().getSimpleName(), method.getName());
                 ((DefaultMonitorAttribute) attribute).setKey(key);
             }
         }

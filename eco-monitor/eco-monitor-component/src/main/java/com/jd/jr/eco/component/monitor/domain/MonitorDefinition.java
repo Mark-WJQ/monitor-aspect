@@ -1,7 +1,8 @@
 package com.jd.jr.eco.component.monitor.domain;
 
 import com.jd.jr.eco.component.monitor.meta.ProfEnum;
-import com.jd.jr.eco.component.monitor.support.KeyCalculater;
+import com.jd.jr.eco.component.monitor.support.KeyCalculaterSupport;
+import com.jd.jr.eco.component.monitor.support.ResultConverterSupport;
 
 /**
  * @author wangjianqiang24
@@ -88,13 +89,15 @@ public interface MonitorDefinition {
      *
      * @return
      */
-    KeyCalculater getKeyCalculater();
+    KeyCalculaterSupport getKeyCalculater();
 
     /**
-     * 获取结果转换类型
+     * 获取结果转换类型，如果方法执行返回结果类型不是 {@link com.jd.jr.eco.component.result.Result} 的子类，
+     * 则需要将结果转换，以便能够在后续的流程中使用统一风格获取数据，减少分歧
+     *
      * @return
      */
-    //ResultConvertSupport getResultConvert();
+    ResultConverterSupport getResultConverter();
 
 
 }

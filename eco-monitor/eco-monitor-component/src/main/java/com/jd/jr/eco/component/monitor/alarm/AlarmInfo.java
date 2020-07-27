@@ -29,7 +29,9 @@ public interface AlarmInfo {
      */
     boolean exception();
 
+    Result getResult();
 
+   Throwable getException();
 
 
 

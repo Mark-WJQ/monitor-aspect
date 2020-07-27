@@ -15,7 +15,7 @@ import java.util.List;
 class SpringELKeyCalculaterTest {
 
 
-    private SpringELKeyCalculater springELKeyCalculater = new SpringELKeyCalculater();
+    private SpringELKeyCalculaterSupport springELKeyCalculater = new SpringELKeyCalculaterSupport();
 
     @Test
     void calculate() throws NoSuchMethodException {

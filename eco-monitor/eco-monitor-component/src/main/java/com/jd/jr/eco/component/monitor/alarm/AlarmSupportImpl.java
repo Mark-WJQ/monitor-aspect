@@ -1,7 +1,6 @@
 package com.jd.jr.eco.component.monitor.alarm;
 
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
-import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +10,7 @@ import java.lang.reflect.Method;
  * @author wangjianqiang24
  * @date 2020/6/1
  */
-public class AlarmSupportImpl implements AlarmSupport<AlarmInfoImpl, DefaultMonitorAttribute> {
+public class AlarmSupportImpl extends AbstractAlarmSupport<AlarmInfoImpl, DefaultMonitorAttribute> {
 
     private static Logger logger = LoggerFactory.getLogger(AlarmSupportImpl.class);
 
