@@ -2,7 +2,7 @@ package com.jd.jr.eco.component.monitor.support;
 
 
 import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
-import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
+import com.jd.jr.eco.component.monitor.meta.MonitorAttribute;
 
 public interface AlarmSupport<I extends AlarmInfo, A extends MonitorAttribute> {
 

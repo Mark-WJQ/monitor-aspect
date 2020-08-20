@@ -1,6 +1,5 @@
-package com.jd.jr.eco.component.monitor.domain;
+package com.jd.jr.eco.component.monitor.meta;
 
-import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
 import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
 import com.jd.jr.eco.component.monitor.support.KeyGeneratorSupport;
 import org.springframework.util.Assert;

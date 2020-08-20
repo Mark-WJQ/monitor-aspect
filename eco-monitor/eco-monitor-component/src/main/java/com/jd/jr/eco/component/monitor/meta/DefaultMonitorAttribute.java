@@ -1,4 +1,4 @@
-package com.jd.jr.eco.component.monitor.domain;
+package com.jd.jr.eco.component.monitor.meta;
 
 import java.util.Objects;
 

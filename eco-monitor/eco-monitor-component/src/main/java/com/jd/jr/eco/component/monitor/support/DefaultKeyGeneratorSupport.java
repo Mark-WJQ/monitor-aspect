@@ -1,6 +1,6 @@
 package com.jd.jr.eco.component.monitor.support;
 
-import com.jd.jr.eco.component.monitor.domain.MonitorDefinition;
+import com.jd.jr.eco.component.monitor.meta.MonitorDefinition;
 import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
 import org.springframework.util.StringUtils;
 

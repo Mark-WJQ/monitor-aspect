@@ -1,6 +1,5 @@
-package com.jd.jr.eco.component.monitor.domain;
+package com.jd.jr.eco.component.monitor.meta;
 
-import com.jd.jr.eco.component.monitor.meta.MonitorAnnotationParser;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.util.ClassUtils;
 

@@ -1,6 +1,5 @@
-package com.jd.jr.eco.component.monitor.domain;
+package com.jd.jr.eco.component.monitor.meta;
 
-import com.jd.jr.eco.component.monitor.meta.ProfEnum;
 import com.jd.jr.eco.component.monitor.support.KeyGeneratorSupport;
 import com.jd.jr.eco.component.monitor.support.ResultConverterSupport;
 

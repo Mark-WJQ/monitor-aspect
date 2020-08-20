@@ -1,6 +1,6 @@
 package com.jd.jr.eco.component.monitor.alarm;
 
-import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
+import com.jd.jr.eco.component.monitor.meta.DefaultMonitorAttribute;
 import com.jd.jr.eco.component.monitor.support.SupportParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

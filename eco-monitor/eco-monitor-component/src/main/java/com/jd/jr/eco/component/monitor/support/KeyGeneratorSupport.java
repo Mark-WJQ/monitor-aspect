@@ -1,6 +1,6 @@
 package com.jd.jr.eco.component.monitor.support;
 
-import com.jd.jr.eco.component.monitor.domain.MonitorDefinition;
+import com.jd.jr.eco.component.monitor.meta.MonitorDefinition;
 
 /**
  * 唯一标识计算

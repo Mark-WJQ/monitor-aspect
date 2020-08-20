@@ -1,6 +1,6 @@
 package com.jd.jr.eco.component.monitor.support;
 
-import com.jd.jr.eco.component.monitor.domain.MonitorDefinition;
+import com.jd.jr.eco.component.monitor.meta.MonitorDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.Expression;

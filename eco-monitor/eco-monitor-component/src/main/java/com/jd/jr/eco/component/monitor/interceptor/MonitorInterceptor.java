@@ -2,8 +2,8 @@ package com.jd.jr.eco.component.monitor.interceptor;
 
 
 import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
-import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
-import com.jd.jr.eco.component.monitor.domain.MonitorAttributeSource;
+import com.jd.jr.eco.component.monitor.meta.MonitorAttribute;
+import com.jd.jr.eco.component.monitor.meta.MonitorAttributeSource;
 import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import com.jd.jr.eco.component.monitor.support.SupportParam;
 import com.jd.jr.eco.component.monitor.support.ResultConverterSupport;

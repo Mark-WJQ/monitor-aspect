@@ -1,7 +1,5 @@
 package com.jd.jr.eco.component.monitor.meta;
 
-import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
-import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
 import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
 import com.jd.jr.eco.component.monitor.support.KeyGeneratorSupport;
 import com.jd.jr.eco.component.monitor.support.ResultConverterSupport;

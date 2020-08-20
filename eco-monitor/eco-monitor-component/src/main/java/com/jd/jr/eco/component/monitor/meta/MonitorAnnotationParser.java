@@ -1,8 +1,6 @@
 package com.jd.jr.eco.component.monitor.meta;
 
 
-import com.jd.jr.eco.component.monitor.domain.MonitorAttribute;
-
 import java.lang.reflect.AnnotatedElement;
 
 /**

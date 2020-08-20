@@ -1,6 +1,6 @@
 package com.jd.jr.eco.component.monitor.support;
 
-import com.jd.jr.eco.component.monitor.domain.DefaultMonitorDefinition;
+import com.jd.jr.eco.component.monitor.meta.DefaultMonitorDefinition;
 import com.jd.jr.eco.component.monitor.starter.execute.TestAop;
 import org.junit.jupiter.api.Test;
 
