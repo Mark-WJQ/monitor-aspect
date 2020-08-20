@@ -7,7 +7,7 @@ import com.jd.jr.eco.component.monitor.domain.MonitorDefinition;
  * @author wangjianqiang24
  * @date 2020/7/24
  */
-public interface KeyCalculaterSupport {
+public interface KeyGeneratorSupport {
 
     /**
      * 开始计算
@@ -15,6 +15,6 @@ public interface KeyCalculaterSupport {
      * @param definition 监控定义
      * @return
      */
-    String calculate(KeyCalParam invocation, MonitorDefinition definition);
+    String calculate(SupportParam invocation, MonitorDefinition definition);
 
 }

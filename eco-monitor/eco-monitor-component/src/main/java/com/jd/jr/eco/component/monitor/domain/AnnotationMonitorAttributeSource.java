@@ -1,17 +1,13 @@
 package com.jd.jr.eco.component.monitor.domain;
 
 import com.jd.jr.eco.component.monitor.meta.MonitorAnnotationParser;
-import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 /**
  * 监控注解数据源
@@ -22,18 +18,11 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class AnnotationMonitorAttributeSource implements MonitorAttributeSource {
 
     /**
-     * 监控整体配置
-     */
-    private MonitorConfig monitorConfig;
-
-
-    /**
      * 转换器集合
      */
     List<MonitorAnnotationParser> annotationParsers;
 
-    public AnnotationMonitorAttributeSource(MonitorConfig monitorConfig, List<MonitorAnnotationParser> annotationParsers) {
-        this.monitorConfig = monitorConfig;
+    public AnnotationMonitorAttributeSource(List<MonitorAnnotationParser> annotationParsers) {
         this.annotationParsers = annotationParsers;
     }
 
@@ -47,83 +36,9 @@ public class AnnotationMonitorAttributeSource implements MonitorAttributeSource 
      */
     @Override
     public MonitorAttribute getMonitorAttribute(Method method, Class<?> target) {
-
         Tuple tuple = computeMonitorAttribue(method, target);
         MonitorAttribute attribute = tuple.getAttribute();
-
-        if (attribute instanceof DefaultMonitorAttribute) {
-            //设置一些公共的值
-            setKey(tuple, method);
-            mergeAttribute(attribute);
-        }
         return attribute;
-    }
-
-    private void setKey(Tuple tuple, Method method) {
-
-        MonitorAttribute attribute = tuple.getAttribute();
-        if (!(attribute instanceof DefaultMonitorAttribute)) {
-            return;
-        }
-        if (tuple.getElement() instanceof Class) {
-            //如果属性中的key是从类上的注解中取得，则认为该key为前缀
-            if (StringUtils.hasLength(attribute.getKey())) {
-                ((DefaultMonitorAttribute) attribute).setKey(String.join(".", attribute.getKey(), method.getName()));
-            }
-        }
-
-        if (StringUtils.isEmpty(attribute.getKey())) {
-            ((DefaultMonitorAttribute) attribute).setAppName(monitorConfig.getAppName());
-            if (StringUtils.isEmpty(attribute.getKey())) {
-                String keyPre = monitorConfig.getKeyPre();
-                if (!StringUtils.hasText(keyPre)) {
-                    keyPre = monitorConfig.getAppName();
-                }
-                String key = String.join(".", keyPre, method.getDeclaringClass().getSimpleName(), method.getName());
-                ((DefaultMonitorAttribute) attribute).setKey(key);
-            }
-        }
-
-    }
-
-    /**
-     * 合并公共配置
-     *
-     * @param attribute
-     */
-    private void mergeAttribute(MonitorAttribute attribute) {
-        if (attribute.mergeConfig()) {
-            if (attribute instanceof DefaultMonitorAttribute) {
-
-                DefaultMonitorAttribute defaultMonitorAttribute = (DefaultMonitorAttribute) attribute;
-                if (isEmpty(attribute.getAlarmCodes()) && !isEmpty(monitorConfig.getAlarmCodes())) {
-                    defaultMonitorAttribute.setAlarmCodes(monitorConfig.getAlarmCodes());
-                }
-
-                if (isEmpty(attribute.getErrorCodes()) && !isEmpty(monitorConfig.getErrorCodes())) {
-                    defaultMonitorAttribute.setErrorCodes(monitorConfig.getErrorCodes());
-                }
-
-
-                if (isEmpty(attribute.getIngoreCodes()) && !isEmpty(monitorConfig.getIngoreCodes())) {
-                    defaultMonitorAttribute.setIngoreCodes(monitorConfig.getIngoreCodes());
-                }
-
-
-                if (isEmpty(attribute.getAlarms()) && !isEmpty(monitorConfig.getAlarmExceptions())) {
-                    defaultMonitorAttribute.setAlarms(monitorConfig.getAlarmExceptions());
-                }
-
-
-                if (isEmpty(attribute.getErrors()) && !isEmpty(monitorConfig.getErrorExceptions())) {
-                    defaultMonitorAttribute.setErrors(monitorConfig.getErrorExceptions());
-                }
-
-                if (isEmpty(attribute.getIngoreErrors()) && !isEmpty(monitorConfig.getIngoreExceptions())) {
-                    defaultMonitorAttribute.setIngoreErrors(monitorConfig.getIngoreExceptions());
-                }
-            }
-        }
     }
 
 

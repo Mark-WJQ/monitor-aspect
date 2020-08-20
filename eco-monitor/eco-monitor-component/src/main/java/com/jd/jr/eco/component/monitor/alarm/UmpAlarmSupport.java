@@ -3,14 +3,12 @@ package com.jd.jr.eco.component.monitor.alarm;
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
 import com.jd.jr.eco.component.monitor.meta.ProfEnum;
 import com.jd.jr.eco.component.monitor.meta.UmpConfig;
+import com.jd.jr.eco.component.monitor.support.SupportParam;
 import com.jd.ump.profiler.CallerInfo;
 import com.jd.ump.profiler.proxy.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
-
-import java.lang.reflect.Method;
 
 /**
  * ump 监控辅助类
@@ -18,7 +16,7 @@ import java.lang.reflect.Method;
  * @author wangjianqiang24
  * @date 2020/6/12
  */
-public class UmpAlarmSupport extends AbstractAlarmSupport<UmpAlarmInfo, DefaultMonitorAttribute> implements InitializingBean {
+public class UmpAlarmSupport extends AbstractAlarmSupport<UmpAlarmInfo, DefaultMonitorAttribute>{
 
     private static Logger logger = LoggerFactory.getLogger(UmpAlarmSupport.class);
 
@@ -37,14 +35,12 @@ public class UmpAlarmSupport extends AbstractAlarmSupport<UmpAlarmInfo, DefaultM
      * 有异常自己内部处理不要抛出来
      * 如果返回空则不记录信息
      *
-     * @param method      当前执行方法
-     * @param targetClass 该方法所属的类
-     * @param arguments
+     * @param param
      * @param attribute
      * @return
      */
     @Override
-    public AlarmInfo registerInfo(Method method, Class targetClass, Object[] arguments, DefaultMonitorAttribute attribute) {
+    public AlarmInfo registerInfo(SupportParam param, DefaultMonitorAttribute attribute) {
         ProfEnum[] enums = attribute.getProfEnums();
         boolean heart = false;
         boolean tp = false;
@@ -129,7 +125,6 @@ public class UmpAlarmSupport extends AbstractAlarmSupport<UmpAlarmInfo, DefaultM
     }
 
 
-    @Override
     public void afterPropertiesSet() throws Exception {
 
         if (umpConfig == null) {

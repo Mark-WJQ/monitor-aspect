@@ -11,5 +11,5 @@ import org.springframework.aop.ClassFilter;
  * @author wangjianqiang24
  * @date 2020/6/4
  */
-public abstract class CandidateClassFilter implements ClassFilter {
+public interface CandidateClassFilter extends ClassFilter {
 }

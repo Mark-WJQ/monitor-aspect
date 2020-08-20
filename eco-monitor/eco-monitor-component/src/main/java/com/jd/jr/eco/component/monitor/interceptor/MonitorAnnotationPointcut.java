@@ -3,8 +3,8 @@ package com.jd.jr.eco.component.monitor.interceptor;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.aop.support.annotation.AnnotationMethodMatcher;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -67,7 +67,7 @@ public class MonitorAnnotationPointcut extends StaticMethodMatcherPointcut {
     }
 
 
-    private static class AnnotationCandidateClassFilter extends CandidateClassFilter {
+    private static class AnnotationCandidateClassFilter implements CandidateClassFilter {
 
         private final Class<? extends Annotation> annotationType;
 
@@ -77,27 +77,13 @@ public class MonitorAnnotationPointcut extends StaticMethodMatcherPointcut {
 
         @Override
         public boolean matches(Class<?> clazz) {
-
-
             return isCandidateClass(clazz, this.annotationType);
         }
 
         private boolean isCandidateClass(Class<?> clazz, Class<? extends Annotation> annotationType) {
-
-            String annotationName = annotationType.getName();
-            if (annotationName.startsWith("java.")) {
-                return true;
-            }
-            if (hasPlainJavaAnnotationsOnly(clazz)) {
-                return false;
-            }
-            return true;
+           return AnnotationUtils.isCandidateClass(clazz,annotationType);
         }
-
-        private boolean hasPlainJavaAnnotationsOnly(Class<?> type) {
-            return (type.getName().startsWith("java.") || type == Ordered.class);
-        }
-
+        
         @Override
         public boolean equals(Object obj) {
             if (this == obj) {

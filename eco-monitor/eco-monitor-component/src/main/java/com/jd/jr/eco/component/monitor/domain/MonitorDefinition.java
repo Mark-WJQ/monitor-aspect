@@ -1,7 +1,7 @@
 package com.jd.jr.eco.component.monitor.domain;
 
 import com.jd.jr.eco.component.monitor.meta.ProfEnum;
-import com.jd.jr.eco.component.monitor.support.KeyCalculaterSupport;
+import com.jd.jr.eco.component.monitor.support.KeyGeneratorSupport;
 import com.jd.jr.eco.component.monitor.support.ResultConverterSupport;
 
 /**
@@ -89,7 +89,7 @@ public interface MonitorDefinition {
      *
      * @return
      */
-    KeyCalculaterSupport getKeyCalculater();
+    KeyGeneratorSupport getKeyGenerator();
 
     /**
      * 获取结果转换类型，如果方法执行返回结果类型不是 {@link com.jd.jr.eco.component.result.Result} 的子类，

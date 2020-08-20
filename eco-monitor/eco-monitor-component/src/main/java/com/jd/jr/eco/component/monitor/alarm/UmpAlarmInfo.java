@@ -7,6 +7,7 @@ import java.util.Objects;
 
 /**
  * ump 监控注册信息相关
+ *
  * @author wangjianqiang24
  * @date 2020/6/12
  */

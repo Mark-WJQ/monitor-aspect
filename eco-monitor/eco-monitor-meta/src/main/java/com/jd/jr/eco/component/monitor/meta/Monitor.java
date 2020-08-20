@@ -19,18 +19,8 @@ public @interface Monitor {
     /**
      * 唯一标识,建议在使用时主动指定
      * <p>
-     * 如果key是从类上的注解中取得并且不为空，则认为该key为每个方法key的前缀，在进行组装时会 {@code key + "." + method.name()}
-     * 如果key是从方法注解上取得并且不为空，则可以直接使用
-     * 如果该注解中的key为空
-     * 1. 如果 {@link MonitorConfig#getKeyPre()} 为空,则将keyPre设置为app.name
-     * 则 {@code key = String.join(".", monitorConfig.getKeyPre(), method.getDeclaringClass().getSimpleName(), method.getName())}
-     * <p>
-     * 该key可以使用占位符，可以自定义，通过实现接口 {@link com.jd.jr.eco.component.monitor.support.KeyCalculaterSupport} 并将bean引用设置到 {@link Monitor#keyCalculater()}
+     * 该key可以使用占位符，可以自定义，配合 {@link Monitor#keyGenerator()}使用更健康
      * 可以参考实现
-     *
-     * @return
-     * @see com.jd.jr.eco.component.monitor.support.SpringELKeyCalculaterSupport
-     * eg: ${app.name}.className.methodName, app.name 是占位符标识，会在上下文配置中查找对应的配置，如果找不到则原样返回
      */
     String key() default "";
 
@@ -125,14 +115,14 @@ public @interface Monitor {
 
 
     /**
-     * 如果key中有占位符或其他需要特殊计算的数据，则需要配置该计算器，
-     * 建议在方法上单独配置，如果在全局配置{@link MonitorConfig#keyCalculater}的话，会导致不需要计算的key也会计算一遍，会消耗一定的时间
+     * {@code KeyGeneratorSupport} 通过实现该接口来实现生成 {@link Monitor#key()} 的规则
      * <p>
-     * 该配置是springContext中key
+     * 通过该配置可以在上下文中找到 {@code KeyGeneratorSupport} 实现
      *
-     * @return
+     * @see com.jd.jr.eco.component.monitor.support.SpringELKeyGeneratorSupport
+     * eg: ${app.name}.className.methodName, app.name 是占位符标识，会在上下文配置中查找对应的配置，如果找不到则原样返回
      */
-    String keyCalculater() default "";
+    String keyGenerator() default "defaultKeyGenerator";
 
     /**
      * 方法结果执行转换器,如果方法执行返回结果类型不是 {@link com.jd.jr.eco.component.result.Result} 的子类，

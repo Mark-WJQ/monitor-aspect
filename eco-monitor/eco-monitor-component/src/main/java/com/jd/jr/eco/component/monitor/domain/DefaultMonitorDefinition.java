@@ -2,7 +2,7 @@ package com.jd.jr.eco.component.monitor.domain;
 
 
 import com.jd.jr.eco.component.monitor.meta.ProfEnum;
-import com.jd.jr.eco.component.monitor.support.KeyCalculaterSupport;
+import com.jd.jr.eco.component.monitor.support.KeyGeneratorSupport;
 import com.jd.jr.eco.component.monitor.support.ResultConverterSupport;
 import com.jd.jr.eco.component.result.Result;
 
@@ -87,13 +87,12 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
     /**
      * 对monitorKey进行计算
      */
-    private KeyCalculaterSupport keyCalculater;
+    private KeyGeneratorSupport keyGenerator;
 
     /**
      * 结果转换器
      */
     private ResultConverterSupport resultConverter;
-
 
     @Override
     public String getKey() {
@@ -187,8 +186,8 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
      * @return
      */
     @Override
-    public KeyCalculaterSupport getKeyCalculater() {
-        return this.keyCalculater;
+    public KeyGeneratorSupport getKeyGenerator() {
+        return this.keyGenerator;
     }
 
     /**
@@ -201,6 +200,7 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
     public ResultConverterSupport getResultConverter() {
         return this.resultConverter;
     }
+
 
     public void setIngoreCodes(String[] ingoreCodes) {
         this.ingoreCodes = ingoreCodes;
@@ -224,11 +224,12 @@ public class DefaultMonitorDefinition implements MonitorDefinition {
         this.profEnums = profEnums;
     }
 
-    public void setKeyCalculater(KeyCalculaterSupport keyCalculater) {
-        this.keyCalculater = keyCalculater;
+    public void setKeyGenerator(KeyGeneratorSupport keyGenerator) {
+        this.keyGenerator = keyGenerator;
     }
 
     public void setResultConverter(ResultConverterSupport resultConverter) {
         this.resultConverter = resultConverter;
     }
+
 }

@@ -1,10 +1,9 @@
 package com.jd.jr.eco.component.monitor.alarm;
 
 import com.jd.jr.eco.component.monitor.domain.DefaultMonitorAttribute;
+import com.jd.jr.eco.component.monitor.support.SupportParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Method;
 
 /**
  * @author wangjianqiang24
@@ -19,14 +18,12 @@ public class AlarmSupportImpl extends AbstractAlarmSupport<AlarmInfoImpl, Defaul
      * 有异常自己内部处理不要抛出来
      * 如果返回空则不记录信息
      *
-     * @param method      当前执行方法
-     * @param targetClass 该方法所属的类
-     * @param arguments 方法请求参数
+     * @param param 方法请求参数
      * @param attribute 监控属性
      * @return
      */
     @Override
-    public AlarmInfo registerInfo(Method method, Class targetClass,Object[] arguments, DefaultMonitorAttribute attribute) {
+    public AlarmInfo registerInfo(SupportParam param, DefaultMonitorAttribute attribute) {
         logger.info("开始记录:{}",attribute.getKey());
         return new AlarmInfoImpl(attribute.getKey());
     }

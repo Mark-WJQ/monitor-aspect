@@ -27,17 +27,9 @@ public class MonitorConfig {
 
 
     /**
-     * 应用名
+     * 应用名,主键前缀，针对每个方法会有一个key
      */
     private String appName;
-
-    /**
-     * 主键前缀，针对每个方法会有一个key
-     * 在组成key是会用到前缀
-     *
-     * @see Monitor#key()
-     */
-    private String keyPre;
 
 
     /**
@@ -76,6 +68,11 @@ public class MonitorConfig {
      */
     private ProfEnum[] profEnums = {ProfEnum.TP,ProfEnum.FunctionError};
 
+    /**
+     * 主键生成
+     */
+    private String keyGenerator;
+
 
     public ProfEnum[] getProfEnums() {
         return profEnums;
@@ -107,14 +104,6 @@ public class MonitorConfig {
 
     public void setAppName(String appName) {
         this.appName = appName;
-    }
-
-    public String getKeyPre() {
-        return keyPre;
-    }
-
-    public void setKeyPre(String keyPre) {
-        this.keyPre = keyPre;
     }
 
     public Class<? extends Throwable>[] getAlarmExceptions() {
@@ -165,6 +154,14 @@ public class MonitorConfig {
         this.ingoreCodes = ingoreCodes;
     }
 
+    public String getKeyGenerator() {
+        return keyGenerator;
+    }
+
+    public void setKeyGenerator(String keyGenerator) {
+        this.keyGenerator = keyGenerator;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -174,8 +171,6 @@ public class MonitorConfig {
                 .append(annotation);
         sb.append(",\"appName\":\"")
                 .append(appName).append('\"');
-        sb.append(",\"keyPre\":\"")
-                .append(keyPre).append('\"');
         sb.append(",\"alarmExceptions\":")
                 .append(Arrays.toString(alarmExceptions));
         sb.append(",\"errorExceptions\":")
@@ -190,6 +185,8 @@ public class MonitorConfig {
                 .append(Arrays.toString(ingoreCodes));
         sb.append(",\"profEnums\":")
                 .append(Arrays.toString(profEnums));
+        sb.append(",\"keyGenerator\":\"")
+                .append(keyGenerator).append('\"');
         sb.append("}");
         return sb.toString();
     }

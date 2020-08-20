@@ -9,6 +9,9 @@ import org.springframework.expression.ParserContext;
 import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * springel 表达式计算
  * 只使用请求参数来替换注解中的占位符
@@ -19,11 +22,12 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * @author wangjianqiang24
  * @date 2020/7/24
  */
-public class SpringELKeyCalculaterSupport implements KeyCalculaterSupport {
+public class SpringELKeyGeneratorSupport implements KeyGeneratorSupport {
 
-    private static Logger logger = LoggerFactory.getLogger(SpringELKeyCalculaterSupport.class);
+    private static Logger logger = LoggerFactory.getLogger(SpringELKeyGeneratorSupport.class);
     private static ExpressionParser parser = new SpelExpressionParser();
     private static ParserContext parserContext = new TemplateParserContext();
+    private static Map<String, Expression> EXP_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 开始计算
@@ -33,11 +37,15 @@ public class SpringELKeyCalculaterSupport implements KeyCalculaterSupport {
      * @return 如果替换失败，则返回null
      */
     @Override
-    public String calculate(KeyCalParam invocation, MonitorDefinition definition) {
+    public String calculate(SupportParam invocation, MonitorDefinition definition) {
         try {
             Object[] args = invocation.getArgs();
-            // 创建解析器
-            Expression expression = parser.parseExpression(definition.getKey(), parserContext);
+            Expression expression = EXP_CACHE.get(definition.getKey());
+            if (expression == null) {
+                // 创建解析器
+                expression = parser.parseExpression(definition.getKey(), parserContext);
+                EXP_CACHE.put(definition.getKey(), expression);
+            }
             //设置解析上下文(有哪些占位荷,以及每种占位符的值-根据方法的参数名和参数值
             String key = expression.getValue(args).toString();
             return key;

@@ -17,10 +17,12 @@ import com.jd.jr.eco.component.monitor.meta.MonitorAnnotationParser;
 import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
 import com.jd.jr.eco.component.monitor.meta.UmpConfig;
 import com.jd.jr.eco.component.monitor.starter.adapter.MonitorPointcutAdapter;
+import com.jd.jr.eco.component.monitor.starter.execute.Inject;
 import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
-import com.jd.jr.eco.component.monitor.support.KeyCalculaterSupport;
-import com.jd.jr.eco.component.monitor.support.SpringELKeyCalculaterSupport;
+import com.jd.jr.eco.component.monitor.support.DefaultKeyGeneratorSupport;
+import com.jd.jr.eco.component.monitor.support.KeyGeneratorSupport;
+import com.jd.jr.eco.component.monitor.support.SpringELKeyGeneratorSupport;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
@@ -30,6 +32,7 @@ import org.springframework.aop.support.ComposablePointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcher;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -66,7 +69,7 @@ public class MonitorConfiguration {
     }
 
 
-    @Bean
+    @Bean(initMethod = "afterPropertiesSet")
     @ConditionalOnProperty(prefix = UMP_CONFIG_PRE, name = "enable", havingValue = "true")
     @ConditionalOnClass(name = {"com.jd.ump.profiler.proxy.Profiler"})
     public UmpAlarmSupport umpAlarmSupport() {
@@ -150,9 +153,9 @@ public class MonitorConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MonitorAttributeSource attributeSource(MonitorConfig monitorConfig, List<MonitorAnnotationParser> annotationParsers) {
-        AnnotationMonitorAttributeSource annotationMonitorAttributeSource = new AnnotationMonitorAttributeSource(monitorConfig, annotationParsers);
-        ConfigMonitorAttributeSource configMonitorAttributeSource = new ConfigMonitorAttributeSource(monitorConfig);
+    public MonitorAttributeSource attributeSource(MonitorConfig monitorConfig, List<MonitorAnnotationParser> annotationParsers,AttributeSourceSupport attributeSourceSupport) {
+        AnnotationMonitorAttributeSource annotationMonitorAttributeSource = new AnnotationMonitorAttributeSource(annotationParsers);
+        ConfigMonitorAttributeSource configMonitorAttributeSource = new ConfigMonitorAttributeSource(monitorConfig,attributeSourceSupport);
         CompositeMonitorAttributeSource source = new CompositeMonitorAttributeSource(annotationMonitorAttributeSource, configMonitorAttributeSource);
         return new CachedAttributeSource(source);
     }
@@ -172,8 +175,21 @@ public class MonitorConfiguration {
 
 
     @Bean
-    public KeyCalculaterSupport springELKeyCalculater() {
-        return new SpringELKeyCalculaterSupport();
+    public KeyGeneratorSupport springELKeyGenerator() {
+        return new SpringELKeyGeneratorSupport();
+    }
+
+    @Bean
+    public DefaultKeyGeneratorSupport defaultKeyGenerator(MonitorConfig monitorConfig){
+        return new DefaultKeyGeneratorSupport(monitorConfig);
+    }
+
+
+    @Bean
+    public AutowiredAnnotationBeanPostProcessor autowiredAnnotationBeanPostProcessorInject(){
+        AutowiredAnnotationBeanPostProcessor processor = new AutowiredAnnotationBeanPostProcessor();
+        processor.setAutowiredAnnotationType(Inject.class);
+        return processor;
     }
 
     @Bean

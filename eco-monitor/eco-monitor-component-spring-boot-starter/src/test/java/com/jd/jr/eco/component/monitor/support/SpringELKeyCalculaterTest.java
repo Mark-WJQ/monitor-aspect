@@ -15,12 +15,12 @@ import java.util.List;
 class SpringELKeyCalculaterTest {
 
 
-    private SpringELKeyCalculaterSupport springELKeyCalculater = new SpringELKeyCalculaterSupport();
+    private SpringELKeyGeneratorSupport springELKeyCalculater = new SpringELKeyGeneratorSupport();
 
     @Test
     void calculate() throws NoSuchMethodException {
         Method method = TestAop.class.getMethod("monitor", List.class);
-        KeyCalParam param = new KeyCalParam(method, new Object[]{Arrays.asList("1222", "3333")});
+        SupportParam param = new SupportParam(method, new Object[]{Arrays.asList("1222", "3333")});
         DefaultMonitorDefinition defaultMonitorDefinition = new DefaultMonitorDefinition();
         defaultMonitorDefinition.setKey("#{[0]}");
         System.out.println(springELKeyCalculater.calculate(param, defaultMonitorDefinition));

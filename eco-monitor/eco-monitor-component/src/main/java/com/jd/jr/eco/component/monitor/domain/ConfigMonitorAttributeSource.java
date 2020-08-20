@@ -1,8 +1,9 @@
 package com.jd.jr.eco.component.monitor.domain;
 
 import com.jd.jr.eco.component.monitor.meta.MonitorConfig;
+import com.jd.jr.eco.component.monitor.support.AttributeSourceSupport;
+import com.jd.jr.eco.component.monitor.support.KeyGeneratorSupport;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 
@@ -19,10 +20,14 @@ public class ConfigMonitorAttributeSource implements MonitorAttributeSource {
      */
     private MonitorConfig monitorConfig;
 
-    public ConfigMonitorAttributeSource(MonitorConfig monitorConfig) {
+    private AttributeSourceSupport attributeSourceSupport;
+
+    public ConfigMonitorAttributeSource(MonitorConfig monitorConfig,AttributeSourceSupport attributeSourceSupport) {
         Assert.notNull(monitorConfig, "监控配置为空请检查");
         Assert.hasLength(monitorConfig.getAppName(), "监控appName为空");
+        Assert.hasLength(monitorConfig.getKeyGenerator(),"key生成器未指定");
         this.monitorConfig = monitorConfig;
+        this.attributeSourceSupport = attributeSourceSupport;
     }
 
 
@@ -44,13 +49,7 @@ public class ConfigMonitorAttributeSource implements MonitorAttributeSource {
         monitorAttribute.setIngoreErrors(monitorConfig.getIngoreExceptions());
         monitorAttribute.setAppName(monitorConfig.getAppName());
         monitorAttribute.setProfEnums(monitorConfig.getProfEnums());
-        if (StringUtils.hasLength(monitorConfig.getKeyPre())) {
-            String key = String.join(".", monitorConfig.getKeyPre(), method.getDeclaringClass().getSimpleName(), method.getName());
-            monitorAttribute.setKey(key);
-        } else {
-            String key = String.join(".", method.getDeclaringClass().getName(), method.getName());
-            monitorAttribute.setKey(key);
-        };
+        monitorAttribute.setKeyGenerator(attributeSourceSupport.getBean(monitorConfig.getKeyGenerator(), KeyGeneratorSupport.class));
         return monitorAttribute;
     }
 

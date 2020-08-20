@@ -58,12 +58,6 @@ public interface MonitorAttribute extends MonitorDefinition {
     boolean ingoreCode(String code);
 
     /**
-     * 是合并配置信息
-     * @return
-     */
-    boolean mergeConfig();
-
-    /**
      * 重新设置唯一标识
      * 主要用来在有el表达式或其他重新解析时重新设置
      * @param key

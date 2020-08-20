@@ -4,6 +4,7 @@ package com.jd.jr.eco.component.monitor.starter.execute;
 import com.jd.jr.eco.component.monitor.meta.Monitor;
 import com.jd.jr.eco.component.result.Result;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ public class TestAop implements TestAopInf<List> {
 
 
     @Override
-    @Monitor(key = "#{[0][0]}.hahahhah",keyCalculater = "springELKeyCalculater")
+    @Validated
+    @Monitor
     public Result monitor(List list){
         System.out.println("--------------------------------");
         return new Result() {
@@ -37,5 +39,7 @@ public class TestAop implements TestAopInf<List> {
         System.out.println("t1-----------------");
         int i = 1/0;
     }
+
+
 
 }
