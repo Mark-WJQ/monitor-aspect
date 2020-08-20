@@ -1,4 +1,4 @@
-package com.jd.jr.eco.component.monitor.alarm;
+package com.jd.jr.eco.component.monitor.support.alarm;
 
 import com.jd.jr.eco.component.result.Result;
 import com.jd.ump.profiler.CallerInfo;
@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author wangjianqiang24
  * @date 2020/6/12
  */
-public class UmpAlarmInfo implements AlarmInfo {
+class UmpAlarmInfo implements AlarmInfo {
 
     public UmpAlarmInfo(CallerInfo info) {
         this.info = info;

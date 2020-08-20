@@ -1,4 +1,4 @@
-package com.jd.jr.eco.component.monitor.alarm;
+package com.jd.jr.eco.component.monitor.support.alarm;
 
 
 import com.jd.jr.eco.component.result.Result;
@@ -7,7 +7,7 @@ import com.jd.jr.eco.component.result.Result;
  * @author wangjianqiang24
  * @date 2020/6/3
  */
-public class AlarmInfoImpl implements AlarmInfo {
+class AlarmInfoImpl implements AlarmInfo {
 
 
     private String key;

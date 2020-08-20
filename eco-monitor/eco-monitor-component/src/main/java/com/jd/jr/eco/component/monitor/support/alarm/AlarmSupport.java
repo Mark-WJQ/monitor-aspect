@@ -1,8 +1,8 @@
-package com.jd.jr.eco.component.monitor.support;
+package com.jd.jr.eco.component.monitor.support.alarm;
 
 
-import com.jd.jr.eco.component.monitor.alarm.AlarmInfo;
 import com.jd.jr.eco.component.monitor.meta.MonitorAttribute;
+import com.jd.jr.eco.component.monitor.support.SupportParam;
 
 public interface AlarmSupport<I extends AlarmInfo, A extends MonitorAttribute> {
 

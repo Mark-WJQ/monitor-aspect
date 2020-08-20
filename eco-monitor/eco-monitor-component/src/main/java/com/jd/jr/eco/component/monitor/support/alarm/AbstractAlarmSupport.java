@@ -1,7 +1,6 @@
-package com.jd.jr.eco.component.monitor.alarm;
+package com.jd.jr.eco.component.monitor.support.alarm;
 
 import com.jd.jr.eco.component.monitor.meta.MonitorAttribute;
-import com.jd.jr.eco.component.monitor.support.AlarmSupport;
 import com.jd.jr.eco.component.result.Result;
 
 /**

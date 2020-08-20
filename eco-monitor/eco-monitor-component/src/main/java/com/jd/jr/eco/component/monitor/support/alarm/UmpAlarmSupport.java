@@ -1,4 +1,4 @@
-package com.jd.jr.eco.component.monitor.alarm;
+package com.jd.jr.eco.component.monitor.support.alarm;
 
 import com.jd.jr.eco.component.monitor.meta.DefaultMonitorAttribute;
 import com.jd.jr.eco.component.monitor.meta.ProfEnum;
