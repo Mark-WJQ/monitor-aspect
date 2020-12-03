@@ -14,9 +14,22 @@ public interface Assert {
     }
 
 
-    default void assertCond(Predicate cond,Object obj,Object... args){
+
+    default <T> void assertCond(Predicate<T> cond, T obj, Object... args){
         if (cond.test(obj)){
             throw newException(args);
+        }
+    }
+
+    /**
+     * 直接指定原因
+     * @param cond
+     * @param obj
+     * @param msg
+     */
+    default <T> void assertCond(Predicate<T> cond, T obj, String msg){
+        if (cond.test(obj)){
+            throw newException(msg);
         }
     }
 
