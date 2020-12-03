@@ -1,7 +1,8 @@
 package com.jd.jr.eco.component.enums;
 
 import com.jd.jr.eco.component.exception.CodeRunTimeException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author wangjianqiang24
@@ -15,11 +16,23 @@ public class ReponseEnumTest {
         try {
             ReponseEnum.NULL.assertNotNull(null,1111);
         }catch (CodeRunTimeException e){
-            System.out.println(e.getInfo());
+            Assertions.assertEquals(ReponseEnum.NULL.getCode(),e.getCode());
         }
-
     }
 
+
+    @Test
+    public void predCondTest(){
+        try {
+            ReponseEnum.NULL.assertCond((obj) ->{
+                return obj == null;
+            },null,"指定判断条件");
+        }catch (CodeRunTimeException e){
+            Assertions.assertEquals(ReponseEnum.NULL.getCode(),e.getCode());
+        }
+
+
+    }
 
 
 
