@@ -11,11 +11,6 @@
 
     <artifactId>eco-monitor-component</artifactId>
     <packaging>jar</packaging>
-
-    <properties>
-        <ump.profiler.version>6.2.2</ump.profiler.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -51,13 +46,6 @@
             <artifactId>eco-monitor-meta</artifactId>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.jd.ump</groupId>
-            <artifactId>profiler</artifactId>
-            <version>${ump.profiler.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
 
